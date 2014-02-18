@@ -1,4 +1,4 @@
 CesMonitorApi
 =============
 
-Ces Moniotr System REST Api
+Ces Monitor System REST Api
