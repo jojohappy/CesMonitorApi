@@ -1,7 +1,94 @@
 from django.db import models
 
+class HostsProfiles(models.Model):
+    hostid = models.BigIntegerField(primary_key = True)
+    devicetype = models.CharField(max_length = 64)
+    name = models.CharField(max_length = 64)
+    os = models.CharField(max_length = 64)
+    serialno = models.CharField(max_length = 64)
+    tag = models.CharField(max_length = 64)
+    macaddress = models.CharField(max_length = 64)
+    hardware = models.TextField(max_length=50000, blank=True, null=True)
+    software = models.TextField(max_length=50000, blank=True, null=True)
+    contact = models.TextField(max_length=50000, blank=True, null=True)
+    location = models.TextField(max_length=50000, blank=True, null=True)
+    notes = models.TextField(max_length=50000, blank=True, null=True)
+
+    class Meta:
+        db_table = 'hosts_profiles'
+
+    def __unicode__(self):
+        return self.hostid
+
+class HostsProfilesExt(models.Model):
+    hostid = models.BigIntegerField(primary_key = True)
+    device_alias = models.CharField(max_length = 64)
+    device_type = models.CharField(max_length = 64)
+    device_chassis = models.CharField(max_length = 64)
+    device_os = models.CharField(max_length = 64)
+    device_os_short = models.CharField(max_length = 64)
+    device_hw_arch = models.CharField(max_length = 64)
+    device_serial = models.CharField(max_length = 64)
+    device_model = models.CharField(max_length = 64)
+    device_tag = models.CharField(max_length = 64)
+    device_vendor = models.CharField(max_length = 64)
+    device_contract = models.CharField(max_length = 64)
+    device_who = models.CharField(max_length = 64)
+    device_status = models.CharField(max_length = 64)
+    device_app_01 = models.CharField(max_length = 64)
+    device_app_02 = models.CharField(max_length = 64)
+    device_app_03 = models.CharField(max_length = 64)
+    device_app_04 = models.CharField(max_length = 64)
+    device_app_05 = models.CharField(max_length = 64)
+    device_url_1 = models.CharField(max_length = 255)
+    device_url_2 = models.CharField(max_length = 255)
+    device_url_3 = models.CharField(max_length = 255)
+    device_networks = models.TextField(max_length=50000, blank=True, null=True)
+    device_notes = models.TextField(max_length=50000, blank=True, null=True)
+    device_hardware = models.TextField(max_length=50000, blank=True, null=True)
+    device_software = models.TextField(max_length=50000, blank=True, null=True)
+    ip_subnet_mask = models.CharField(max_length = 39)
+    ip_router = models.CharField(max_length = 39)
+    ip_macaddress = models.CharField(max_length = 64)
+    oob_ip = models.CharField(max_length = 39)
+    oob_subnet_mask = models.CharField(max_length = 39)
+    oob_router = models.CharField(max_length = 39)
+    date_hw_buy = models.CharField(max_length = 64)
+    date_hw_install = models.CharField(max_length = 64)
+    date_hw_expiry = models.CharField(max_length = 64)
+    date_hw_decomm = models.CharField(max_length = 64)
+    site_street_1 = models.CharField(max_length = 128)
+    site_street_2 = models.CharField(max_length = 128)
+    site_street_3 = models.CharField(max_length = 128)
+    site_city = models.CharField(max_length = 128)
+    site_state = models.CharField(max_length = 64)
+    site_country = models.CharField(max_length = 64)
+    site_zip = models.CharField(max_length = 64)
+    site_rack = models.CharField(max_length = 128)
+    site_notes = models.TextField(max_length=50000, blank=True, null=True)
+    poc_1_name = models.CharField(max_length = 128)
+    poc_1_email = models.CharField(max_length = 128)
+    poc_1_phone_1 = models.CharField(max_length = 64)
+    poc_1_phone_2 = models.CharField(max_length = 64)
+    poc_1_cell = models.CharField(max_length = 64)
+    poc_1_screen = models.CharField(max_length = 64)
+    poc_1_notes = models.TextField(max_length=50000, blank=True, null=True)
+    poc_2_name = models.CharField(max_length = 128)
+    poc_2_email = models.CharField(max_length = 128)
+    poc_2_phone_1 = models.CharField(max_length = 64)
+    poc_2_phone_2 = models.CharField(max_length = 64)
+    poc_2_cell = models.CharField(max_length = 64)
+    poc_2_screen = models.CharField(max_length = 64)
+    poc_2_notes = models.TextField(max_length=50000, blank=True, null=True)
+
+    class Meta:
+        db_table = 'hosts_profiles_ext'
+
+    def __unicode__(self):
+        return self.hostid
+
 class Host(models.Model):
-    hostid = models.IntegerField(primary_key = True)
+    hostid = models.BigIntegerField(primary_key = True)
     proxy_hostid = models.IntegerField()
     host = models.CharField(max_length = 64)
     dns = models.CharField(max_length = 64)
@@ -39,18 +126,19 @@ class Host(models.Model):
     ssh_error = models.CharField(max_length = 64)
     snmp_errors_from = models.IntegerField()
     snmp_error = models.CharField(max_length = 64)
-
+    hosts_profiles = models.OneToOneField(HostsProfiles, db_column = 'hostid', null = True)
+    hosts_profiles_ext = models.OneToOneField(HostsProfilesExt, db_column = 'hostid', null = True)
     class Meta:
         db_table = 'hosts'
 
     def __unicode__(self):
-        return self.name
+        return self.host
 
 class Group(models.Model):
-    groupid = models.IntegerField(primary_key = True)
+    groupid = models.BigIntegerField(primary_key = True)
     internal = models.IntegerField()
     name = models.CharField(max_length = 64)
-    hosts = models.ManyToManyField(Host, through = 'hosts_groups')
+    hosts = models.ManyToManyField(Host, through = 'HostsGroups')
 
     class Meta:
         db_table = 'groups'
@@ -58,10 +146,10 @@ class Group(models.Model):
     def __unicode__(self):
         return self.name
 
-class hosts_groups(models.Model):
-    hostgroupid = models.IntegerField(primary_key = True)
-    host = models.ForeignKey(Host, related_name = 'hostid')
-    group = models.ForeignKey(Group, related_name = 'groupid')
+class HostsGroups(models.Model):
+    hostgroupid = models.BigIntegerField(primary_key = True)
+    host = models.ForeignKey(Host, db_column = 'hostid')
+    group = models.ForeignKey(Group, db_column = 'groupid')
     class Meta:
-		db_table = 'hosts_groups'
-
+        db_table = 'hosts_groups'
+        
