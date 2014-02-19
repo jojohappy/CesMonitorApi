@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'CesMonitorApi.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^hosts/', include(hostsgroup_resource.urls)),
-    url(r'^', include(hosts_resource.urls)),
+    url(r'^api/admin/', include(admin.site.urls)),
+    url(r'^api/hosts/', include(hostsgroup_resource.urls)),
+    url(r'^api/', include(hosts_resource.urls)),
 )
