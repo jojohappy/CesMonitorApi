@@ -198,3 +198,35 @@ class Item(models.Model):
     host = models.OneToOneField(Host, db_column = 'hostid', null = True)
     class Meta:
         db_table = 'items'
+        
+class Event(models.Model):
+    eventid = models.BigIntegerField(primary_key = True)
+    clock = models.IntegerField(default = 0)
+    status = models.CharField(max_length = 16)
+    priority = models.IntegerField(default = 0)
+    information = models.CharField(max_length = 255)
+    during_clock = models.IntegerField(default = 0)
+    acknowledged = models.IntegerField(default = 0)
+    tr_status = models.IntegerField(default = 0)
+    value = models.IntegerField(default = 0)
+    item = models.OneToOneField(Item, db_column = 'itemid', null = True)
+    host = models.OneToOneField(Host, db_column = 'hostid', null = True)
+    class Meta:
+        db_table = 'events_view'
+
+class Application(models.Model):
+    applicationid = models.BigIntegerField(primary_key = True)
+    name = models.CharField(max_length = 255)
+    templateid = models.BigIntegerField()
+    hostid = models.BigIntegerField()
+    items = models.ManyToManyField(Item, through = 'ItemsApplications')
+    # host = models.OneToOneField(Host, db_column = 'hostid', null = True)
+    class Meta:
+        db_table = 'applications'
+        
+class ItemsApplications(models.Model):
+    itemappid = models.BigIntegerField(primary_key = True)
+    app = models.ForeignKey(Application, db_column = 'applicationid')
+    item = models.ForeignKey(Item, db_column = 'itemid')
+    class Meta:
+        db_table = 'items_applications'

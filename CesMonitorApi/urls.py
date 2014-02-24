@@ -5,10 +5,14 @@ admin.autodiscover()
 from CesMonitorApi.api import GroupsResource
 from CesMonitorApi.api import HostsResource
 from CesMonitorApi.api import ItemsResource
+from CesMonitorApi.api import EventsResource
+from CesMonitorApi.api import ApplicationsResource
 
 hostsgroup_resource = GroupsResource()
 hosts_resource = HostsResource()
 items_resource = ItemsResource()
+events_resource = EventsResource()
+apps_resource = ApplicationsResource()
 
 urlpatterns = patterns('',
     # Examples:
@@ -19,4 +23,6 @@ urlpatterns = patterns('',
     url(r'^api/hosts/', include(hostsgroup_resource.urls)),
     url(r'^api/', include(hosts_resource.urls)),
     url(r'^api/', include(items_resource.urls)),
+    url(r'^api/', include(events_resource.urls)),
+    url(r'^api/', include(apps_resource.urls)),
 )
