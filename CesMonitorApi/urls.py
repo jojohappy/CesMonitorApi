@@ -4,9 +4,11 @@ from django.contrib import admin
 admin.autodiscover()
 from CesMonitorApi.api import GroupsResource
 from CesMonitorApi.api import HostsResource
+from CesMonitorApi.api import ItemsResource
 
 hostsgroup_resource = GroupsResource()
 hosts_resource = HostsResource()
+items_resource = ItemsResource()
 
 urlpatterns = patterns('',
     # Examples:
@@ -16,4 +18,5 @@ urlpatterns = patterns('',
     url(r'^api/admin/', include(admin.site.urls)),
     url(r'^api/hosts/', include(hostsgroup_resource.urls)),
     url(r'^api/', include(hosts_resource.urls)),
+    url(r'^api/', include(items_resource.urls)),
 )
