@@ -11,6 +11,7 @@ from CesMonitorApi.models import HostsProfilesExt
 from CesMonitorApi.models import Item
 from CesMonitorApi.models import Event
 from CesMonitorApi.models import Application
+from CesMonitorApi.models import Trigger
 
 class GroupsResource(ModelResource):
     hosts = fields.OneToManyField('CesMonitorApi.api.HostsResource', 'hosts', full = True, null = True)
@@ -104,7 +105,7 @@ class ItemsResource(ModelResource):
             objects.append(bundle)
 
         object_list = {
-            'items': objects,
+            self._meta.collection_name: objects,
             'count': items.count(),
         }
 
@@ -134,6 +135,38 @@ class EventsResource(ModelResource):
         collection_name = 'events'
         excludes = []
         include_resource_uri = False
+    
+    def get_list(self, request, **kwargs):
+        reverse = int(request.GET.get('reverse', 0))
+        sort = request.GET.get('sort', 'eventid')
+        if reverse == 1:
+            sort = "-" + sort
+        
+        base_bundle = self.build_bundle(request=request)
+        objects = self.obj_get_list(bundle=base_bundle, **self.remove_api_resource_names(kwargs)).filter(trigger__isnull=False,clock=Trigger('lastchange'),value=1,tr_status=0)
+        sorted_objects = self.apply_sorting(objects, options=request.GET)
+        
+        paginator = Paginator(sorted_objects, request.GET.get('limit', 50))
+
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+        except InvalidPage:
+            raise Http404("Sorry, no results on that page.")
+
+        objects = []
+
+        for result in page.object_list:
+            bundle = self.build_bundle(obj=result, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+
+        object_list = {
+            self._meta.collection_name: objects,
+            'count': sorted_objects.count(),
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
     
     def determine_format(self, request):
         return "application/json"

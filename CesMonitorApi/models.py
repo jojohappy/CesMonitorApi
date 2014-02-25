@@ -198,6 +198,12 @@ class Item(models.Model):
     host = models.OneToOneField(Host, db_column = 'hostid', null = True)
     class Meta:
         db_table = 'items'
+
+class Trigger(models.Model):
+    triggerid = models.BigIntegerField(primary_key = True)
+    lastchange = models.IntegerField(default = 0)
+    class Meta:
+        db_table = 'triggers'
         
 class Event(models.Model):
     eventid = models.BigIntegerField(primary_key = True)
@@ -209,6 +215,7 @@ class Event(models.Model):
     acknowledged = models.IntegerField(default = 0)
     tr_status = models.IntegerField(default = 0)
     value = models.IntegerField(default = 0)
+    trigger = models.ForeignKey(Trigger, db_column = 'triggerid', null = True, blank=True)
     item = models.OneToOneField(Item, db_column = 'itemid', null = True)
     host = models.OneToOneField(Host, db_column = 'hostid', null = True)
     class Meta:
@@ -223,7 +230,7 @@ class Application(models.Model):
     # host = models.OneToOneField(Host, db_column = 'hostid', null = True)
     class Meta:
         db_table = 'applications'
-        
+
 class ItemsApplications(models.Model):
     itemappid = models.BigIntegerField(primary_key = True)
     app = models.ForeignKey(Application, db_column = 'applicationid')
