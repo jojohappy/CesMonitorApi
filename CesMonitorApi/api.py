@@ -1,9 +1,12 @@
-from django.conf.urls import url
+import datetime
+import time
 from tastypie.resources import ModelResource
 from tastypie import fields
 from tastypie.utils import trailing_slash
+from django.conf.urls import url
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
+from django.db.models import Q
 from CesMonitorApi.models import Group
 from CesMonitorApi.models import Host
 from CesMonitorApi.models import HostsProfiles
@@ -12,6 +15,7 @@ from CesMonitorApi.models import Item
 from CesMonitorApi.models import Event
 from CesMonitorApi.models import Application
 from CesMonitorApi.models import Trigger
+from CesMonitorApi.models import ItemHistory
 
 class GroupsResource(ModelResource):
     hosts = fields.OneToManyField('CesMonitorApi.api.HostsResource', 'hosts', full = True, null = True)
@@ -108,20 +112,63 @@ class ItemsResource(ModelResource):
         return self.create_response(request, to_be_serialized)
 
     def get_history_item(self, request, **kwargs):
-        self.method_check(request, allowed=['get'])
-        self.is_authenticated(request)
-        self.throttle_check(request)
-        base_bundle = self.build_bundle(request=request)
-        item = self.get_object_list(request).filter(itemid = kwargs['pk'])
         limit = request.GET.get('limit', 50)
-        cpage = int(request.GET.get('page', 1))
-        sort = request.GET.get('sort', 'clock')
+        sort = request.GET.get('sort', '-clock')
         reverse = int(request.GET.get('reverse', 0))
         if reverse == 1:
             sort = "-" + sort
-        formdate = request.GET.get('from_date', '')
+        fromdate = request.GET.get('from_date', '')
         enddate = request.GET.get('end_date', '')
-        return self.create_response(request, object_list)
+
+        basic_bundle = self.build_bundle(request=request)
+        try:
+            obj = self.cached_obj_get(bundle=basic_bundle, **self.remove_api_resource_names(kwargs))
+        except ObjectDoesNotExist:
+            return http.HttpNotFound()
+        except MultipleObjectsReturned:
+            return http.HttpMultipleChoices("More than one resource is found at this URI.")
+        bundle = self.build_bundle(obj=obj, request=request)
+        bundle = self.full_dehydrate(bundle)
+        bundle = self.alter_detail_data_to_serialize(request, bundle)
+        
+        value_type = int(bundle.data['value_type'])
+        if value_type == 0:
+            dbname = 'history'
+        elif value_type == 1:
+            dbname = 'history_str'
+        else:
+            dbname = 'history_uint'
+        fromdate_clock = 0
+        enddate_clock = 0
+        if fromdate != '':
+            time_f = datetime.datetime.strptime(fromdate, '%Y-%m-%d %H:%M:%S').timetuple()
+            fromdate_clock = int(time.mktime(time_f))
+        if enddate != '':
+            time_e = datetime.datetime.strptime(enddate, '%Y-%m-%d %H:%M:%S').timetuple()
+            enddate_clock = int(time.mktime(time_e))
+        
+        query_filter = Q(itemid=bundle.data['itemid'])
+        
+        if fromdate_clock != 0:
+            query_filter.add(Q(clock__gte=fromdate_clock), query_filter.connector)
+        if enddate_clock != 0:
+            query_filter.add(Q(clock__lte=enddate_clock), query_filter.connector)
+        
+        
+        query_item_history_set = ItemHistory.item_history_objects.items_history(dbname, query_filter, sort)
+        item_history_resource = ItemHistoryResource()
+        paginator = item_history_resource._meta.paginator_class(request.GET, query_item_history_set, resource_uri=item_history_resource.get_resource_uri(), limit=limit, max_limit=item_history_resource._meta.max_limit, collection_name=item_history_resource._meta.collection_name)
+        to_be_serialized = paginator.page()
+        history_bundles = []
+
+        for obj in to_be_serialized[item_history_resource._meta.collection_name]:
+            history_bundle = item_history_resource.build_bundle(obj=obj, request=request)
+            history_bundles.append(item_history_resource.full_dehydrate(history_bundle, for_list=True))
+
+        to_be_serialized[item_history_resource._meta.collection_name] = history_bundles
+        to_be_serialized['item'] = bundle  
+        to_be_serialized = self.alter_detail_data_to_serialize(request, to_be_serialized)
+        return self.create_response(request, to_be_serialized)
         
     def get_event_item(self, request, **kwargs):
         event_resource = EventsResource()
@@ -145,7 +192,19 @@ class ItemsResource(ModelResource):
         event_bundle.data['items'] = None
         to_be_serialized = self.alter_detail_data_to_serialize(request, to_be_serialized)
         return self.create_response(request, to_be_serialized)
-    
+
+class ItemHistoryResource(ModelResource):
+    class Meta:
+        queryset = ItemHistory.objects.all()
+        resource_name = 'item_historys'
+        collection_name = 'item_historys'
+        excludes = []
+        include_resource_uri = False
+        max_limit = None
+        
+    def determine_format(self, request):
+        return "application/json"
+        
 class EventsResource(ModelResource):
     # host = fields.OneToOneField('CesMonitorApi.api.HostsResource', 'host', full = True, null = True)
     items = fields.OneToOneField('CesMonitorApi.api.ItemsResource', 'item', full = True, null = True)

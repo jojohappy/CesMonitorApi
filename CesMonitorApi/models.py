@@ -196,9 +196,26 @@ class Item(models.Model):
     privatekey = models.CharField(max_length = 64)
     mtime = models.IntegerField(default = 0)
     host = models.OneToOneField(Host, db_column = 'hostid', null = True)
+
     class Meta:
         db_table = 'items'
 
+class ItemHistorytManager(models.Manager):
+    def items_history(self, dbname, query_filter, sort):
+        ItemHistory._meta.db_table = dbname
+        queryset = ItemHistory.objects.filter(query_filter).order_by(sort)
+        return queryset
+        
+class ItemHistory(models.Model):
+    itemid = models.BigIntegerField(primary_key = True)
+    clock = models.IntegerField(default = 0)
+    value = models.CharField(max_length = 255)
+    item_history_objects = ItemHistorytManager()
+    objects = models.Manager()
+    
+    class Meta:
+        db_table = 'history'
+        
 class Trigger(models.Model):
     triggerid = models.BigIntegerField(primary_key = True)
     lastchange = models.IntegerField(default = 0)
