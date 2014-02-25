@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import connection, models
 
 class HostsProfiles(models.Model):
     hostid = models.BigIntegerField(primary_key = True)
@@ -204,6 +204,15 @@ class Trigger(models.Model):
     lastchange = models.IntegerField(default = 0)
     class Meta:
         db_table = 'triggers'
+
+class EventManager(models.Manager):
+    def current_events(self):
+        cursor = connection.cursor()
+        cursor.execute("""
+            select a.eventid from events_view a, triggers t where a.value=1 and a.tr_status=0 and a.triggerid=t.triggerid and a.clock = t.lastchange;""")
+        row = [row[0] for row in cursor.fetchall()]
+        queryset = Event.objects.filter(pk__in = row)
+        return queryset
         
 class Event(models.Model):
     eventid = models.BigIntegerField(primary_key = True)
@@ -215,9 +224,12 @@ class Event(models.Model):
     acknowledged = models.IntegerField(default = 0)
     tr_status = models.IntegerField(default = 0)
     value = models.IntegerField(default = 0)
-    trigger = models.ForeignKey(Trigger, db_column = 'triggerid', null = True, blank=True)
+    #trigger = models.ForeignKey(Trigger, db_column = 'triggerid', null = True, blank=True)
+    triggerid = models.BigIntegerField()
     item = models.OneToOneField(Item, db_column = 'itemid', null = True)
-    host = models.OneToOneField(Host, db_column = 'hostid', null = True)
+    # host = models.OneToOneField(Host, db_column = 'hostid', null = True)
+    event_objects = EventManager()
+    objects = models.Manager()
     class Meta:
         db_table = 'events_view'
 
