@@ -140,12 +140,15 @@ class ItemsResource(ModelResource):
             dbname = 'history_uint'
         fromdate_clock = 0
         enddate_clock = 0
-        if fromdate != '':
-            time_f = datetime.datetime.strptime(fromdate, '%Y-%m-%d %H:%M:%S').timetuple()
-            fromdate_clock = int(time.mktime(time_f))
-        if enddate != '':
-            time_e = datetime.datetime.strptime(enddate, '%Y-%m-%d %H:%M:%S').timetuple()
-            enddate_clock = int(time.mktime(time_e))
+        try:
+            if fromdate != '':
+                time_f = datetime.datetime.strptime(fromdate, '%Y-%m-%d %H:%M:%S').timetuple()
+                fromdate_clock = int(time.mktime(time_f))
+            if enddate != '':
+                time_e = datetime.datetime.strptime(enddate, '%Y-%m-%d %H:%M:%S').timetuple()
+                enddate_clock = int(time.mktime(time_e))
+        except :
+            raise BadRequest("Could not convert string to date.")
         
         query_filter = Q(itemid=bundle.data['itemid'])
         
@@ -215,6 +218,7 @@ class EventsResource(ModelResource):
         excludes = []
         include_resource_uri = False
         max_limit = None
+        
     
     def prepend_urls(self):
         return [
@@ -222,13 +226,45 @@ class EventsResource(ModelResource):
         ]
     
     def get_list(self, request, **kwargs):
+        hostid_f = int(request.GET.get('hostid', -1))
         reverse = int(request.GET.get('reverse', 0))
         sort = request.GET.get('sort', 'eventid')
+        fromdate = request.GET.get('from_date', '')
+        enddate = request.GET.get('end_date', '')
+        event_content = request.GET.get('event_content', '')
+        event_priority = int(request.GET.get('event_priority', -1))
+        acknowledged_f = int(request.GET.get('acknowledged', -1))
+        
         if reverse == 1:
             sort = "-" + sort
         
+        fromdate_clock = 0
+        enddate_clock = 0
+        try:
+            if fromdate != '':
+                time_f = datetime.datetime.strptime(fromdate, '%Y-%m-%d %H:%M:%S').timetuple()
+                fromdate_clock = int(time.mktime(time_f))
+            if enddate != '':
+                time_e = datetime.datetime.strptime(enddate, '%Y-%m-%d %H:%M:%S').timetuple()
+                enddate_clock = int(time.mktime(time_e))
+        except :
+            raise BadRequest("Could not convert string to date.")
+        
+        query_filter = Q(information__contains=event_content)
+        
+        if fromdate_clock != 0:
+            query_filter.add(Q(clock__gte=fromdate_clock), query_filter.connector)
+        if enddate_clock != 0:
+            query_filter.add(Q(clock__lte=enddate_clock), query_filter.connector)
+        if hostid_f != -1:
+            query_filter.add(Q(hostid=hostid_f), query_filter.connector)
+        if event_priority != -1:
+            query_filter.add(Q(priority=event_priority), query_filter.connector)
+        if acknowledged_f != -1:
+            query_filter.add(Q(acknowledged=acknowledged_f), query_filter.connector)
+        
         base_bundle = self.build_bundle(request=request)
-        objects = self.obj_get_list(bundle=base_bundle, **self.remove_api_resource_names(kwargs)).order_by(sort)
+        objects = self.obj_get_list(bundle=base_bundle, **self.remove_api_resource_names(kwargs)).filter(query_filter).order_by(sort)
         sorted_objects = self.apply_sorting(objects, options=request.GET)
         
         paginator = self._meta.paginator_class(request.GET, sorted_objects, resource_uri=self.get_resource_uri(), limit=request.GET.get('limit', 50), max_limit=self._meta.max_limit, collection_name=self._meta.collection_name)

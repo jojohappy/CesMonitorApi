@@ -243,6 +243,7 @@ class Event(models.Model):
     value = models.IntegerField(default = 0)
     #trigger = models.ForeignKey(Trigger, db_column = 'triggerid', null = True, blank=True)
     triggerid = models.BigIntegerField()
+    hostid = models.BigIntegerField()
     item = models.OneToOneField(Item, db_column = 'itemid', null = True)
     # host = models.OneToOneField(Host, db_column = 'hostid', null = True)
     event_objects = EventManager()
