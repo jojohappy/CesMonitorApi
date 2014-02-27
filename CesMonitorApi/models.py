@@ -166,7 +166,7 @@ class Item(models.Model):
     history = models.IntegerField(default = 90)
     trends = models.IntegerField(default = 356)
     lastvalue = models.CharField(max_length = 255, null = True)
-    lastclock = models.IntegerField(default = 0, null = True)
+    lastclock = models.CharField(max_length = 16, null = True)
     prevvalue = models.CharField(max_length = 255, null = True)
     status = models.IntegerField(default = 0)
     value_type = models.IntegerField(default = 0)
@@ -208,7 +208,7 @@ class ItemHistorytManager(models.Manager):
         
 class ItemHistory(models.Model):
     itemid = models.BigIntegerField(primary_key = True)
-    clock = models.IntegerField(default = 0)
+    clock = models.CharField(max_length = 16)
     value = models.CharField(max_length = 255)
     item_history_objects = ItemHistorytManager()
     objects = models.Manager()
@@ -233,7 +233,7 @@ class EventManager(models.Manager):
         
 class Event(models.Model):
     eventid = models.BigIntegerField(primary_key = True)
-    clock = models.IntegerField(default = 0)
+    clock = models.CharField(max_length = 16)
     status = models.CharField(max_length = 16)
     priority = models.IntegerField(default = 0)
     information = models.CharField(max_length = 255)

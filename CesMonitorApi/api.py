@@ -18,6 +18,9 @@ from CesMonitorApi.models import Application
 from CesMonitorApi.models import Trigger
 from CesMonitorApi.models import ItemHistory
 
+def convert_int_to_datetime(origin_datetime):
+    return datetime.datetime.fromtimestamp(origin_datetime).strftime('%Y-%m-%d %H:%M:%S')
+
 class GroupsResource(ModelResource):
     hosts = fields.OneToManyField('CesMonitorApi.api.HostsResource', 'hosts', full = True, null = True)
     class Meta:
@@ -196,7 +199,14 @@ class ItemsResource(ModelResource):
         event_bundle.data['items'] = None
         to_be_serialized = self.alter_detail_data_to_serialize(request, to_be_serialized)
         return self.create_response(request, to_be_serialized)
-
+    
+    def dehydrate(self, bundle):
+        try:
+            bundle.data['lastclock'] = convert_int_to_datetime(origin_datetime=int(bundle.data['lastclock']))
+        except :
+            pass
+        return bundle
+        
 class ItemHistoryResource(ModelResource):
     class Meta:
         queryset = ItemHistory.objects.all()
@@ -205,7 +215,11 @@ class ItemHistoryResource(ModelResource):
         excludes = []
         include_resource_uri = False
         max_limit = None
-        
+    
+    def dehydrate(self, bundle):
+        bundle.data['clock'] = convert_int_to_datetime(origin_datetime=int(bundle.data['clock']))
+        return bundle
+    
     def determine_format(self, request):
         return "application/json"
         
@@ -289,6 +303,13 @@ class EventsResource(ModelResource):
         if 0 < full_path.find('history'):
             return self._meta.queryset._clone()
         return Event.event_objects.current_events()._clone()
+        
+    def dehydrate(self, bundle):
+        try:
+            bundle.data['clock'] = convert_int_to_datetime(origin_datetime=int(bundle.data['clock']))
+        except :
+            pass
+        return bundle
         
     def determine_format(self, request):
         return "application/json"
