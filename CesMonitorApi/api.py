@@ -1,8 +1,9 @@
 import datetime
 import time
-from tastypie.resources import ModelResource
 from tastypie import fields
+from tastypie.resources import ModelResource
 from tastypie.utils import trailing_slash
+from tastypie.constants import ALL
 from django.conf.urls import url
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
@@ -218,7 +219,10 @@ class EventsResource(ModelResource):
         excludes = []
         include_resource_uri = False
         max_limit = None
-        
+        filtering = {
+            "acknowledged": ALL,
+            "hostid": ALL
+        }
     
     def prepend_urls(self):
         return [
