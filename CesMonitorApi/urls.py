@@ -25,4 +25,5 @@ urlpatterns = patterns('',
     url(r'^api/', include(items_resource.urls)),
     url(r'^api/', include(events_resource.urls)),
     url(r'^api/', include(apps_resource.urls)),
+    url(r'^api/events_statistics/$', 'CesMonitorApi.events_statistics'),
 )
