@@ -230,6 +230,32 @@ class EventManager(models.Manager):
         row = [row[0] for row in cursor.fetchall()]
         queryset = Event.objects.filter(pk__in = row)
         return queryset
+    
+    def events_statistics_count(self, from_date, end_date):
+        cursor = connection.cursor()
+        cursor.execute("""
+            select HOUR(FROM_UNIXTIME(clock)) AS h, FLOOR(MINUTE(FROM_UNIXTIME(clock)) / 60) AS v, COUNT(*) as count from events_view where clock>%s and clock<%s group by h, v;""", [from_date, end_date])
+        events_statistics = []
+        
+        for row in cursor.fetchall():
+            events_statistic = {}
+            events_statistic['hour'] = row[0]
+            events_statistic['count'] = row[2]
+            events_statistics.append(events_statistic)
+        return events_statistics
+    
+    def events_statistics_priority(self, from_date, end_date):
+        cursor = connection.cursor()
+        cursor.execute("""
+            select priority, count(*) as count from events_view where clock>%s and clock<%s group by priority;""", [from_date, end_date])
+        events_statistics = []
+        
+        for row in cursor.fetchall():
+            events_statistic = {}
+            events_statistic['priority'] = row[0]
+            events_statistic['count'] = row[1]
+            events_statistics.append(events_statistic)
+        return events_statistics
         
 class Event(models.Model):
     eventid = models.BigIntegerField(primary_key = True)
