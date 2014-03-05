@@ -8,15 +8,7 @@ from django.conf.urls import url
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
 from django.db.models import Q
-from CesMonitorApi.models import Group
-from CesMonitorApi.models import Host
-from CesMonitorApi.models import HostsProfiles
-from CesMonitorApi.models import HostsProfilesExt
-from CesMonitorApi.models import Item
-from CesMonitorApi.models import Event
-from CesMonitorApi.models import Application
-from CesMonitorApi.models import Trigger
-from CesMonitorApi.models import ItemHistory
+from CesMonitorApi.models import *
 
 def convert_int_to_datetime(origin_datetime):
     return datetime.datetime.fromtimestamp(origin_datetime).strftime('%Y-%m-%d %H:%M:%S')
@@ -47,6 +39,35 @@ class HostsResource(ModelResource):
         
     def determine_format(self, request):
         return "application/json"
+        
+    def dehydrate(self, bundle):
+        hostid_f = int(bundle.data['hostid'])
+        query_filter = Q(hostid=hostid_f)
+        query_set = Event.event_objects.current_events().filter(query_filter)
+        events = []
+        event_resource = EventsResource()
+        for event in query_set:
+            event.item = None
+            event_bundle = event_resource.build_bundle(obj=event, request=bundle.request)
+            events.append(event_resource.full_dehydrate(event_bundle, for_list=False))
+        bundle.data['events'] = events
+        #request.session['userid']
+        userid = 1
+        query_filter_favourite = Q(userid=userid)
+        query_filter_favourite.add(Q(hostid=hostid_f), query_filter_favourite.connector)
+        query_favourite_set = Favourite.objects.all().filter(query_filter_favourite)
+        if query_favourite_set.count() == 0:
+            bundle.data['favourite'] = None
+        elif query_favourite_set.first().status == 0:
+            bundle.data['favourite'] = None
+        else:
+            favourite_resource = FavouritesResource()
+            favourite_bundle = favourite_resource.build_bundle(obj=query_favourite_set.first(), request=bundle.request)
+            favourite_bundle = favourite_resource.full_dehydrate(favourite_bundle)
+            favourite_bundle = favourite_resource.alter_detail_data_to_serialize(bundle.request, favourite_bundle)
+            bundle.data['favourite'] = favourite_bundle
+            
+        return bundle
 
 class HostsProfilesResource(ModelResource):
     class Meta:
@@ -349,5 +370,31 @@ class ApplicationsResource(ModelResource):
         to_be_serialized = self.alter_list_data_to_serialize(request, to_be_serialized)
         return self.create_response(request, to_be_serialized)
     
+    def determine_format(self, request):
+        return "application/json"
+        
+class ClassificationsResource(ModelResource):
+    groups = fields.OneToManyField('CesMonitorApi.api.GroupsResource', 'groups', full = True, null = True)
+    class Meta:
+        queryset = Classification.objects.all()
+        resource_name = 'classifications'
+        collection_name = 'groupsclassifications'
+        excludes = []
+        include_resource_uri = False
+        max_limit = None
+
+    def determine_format(self, request):
+        return "application/json"
+
+class FavouritesResource(ModelResource):
+    # host = fields.OneToOneField('CesMonitorApi.api.HostsResource', 'hosts', full = True, null = True)
+    class Meta:
+        queryset = Favourite.objects.all()
+        resource_name = 'favourites'
+        collection_name = 'favourites'
+        excludes = []
+        include_resource_uri = False
+        max_limit = None
+        
     def determine_format(self, request):
         return "application/json"

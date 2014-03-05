@@ -293,3 +293,26 @@ class ItemsApplications(models.Model):
     item = models.ForeignKey(Item, db_column = 'itemid')
     class Meta:
         db_table = 'items_applications'
+        
+class Classification(models.Model):
+    classificationid = models.BigIntegerField(primary_key = True)
+    name = models.CharField(max_length = 255)
+    groups = models.ManyToManyField(Group, through = 'GroupsClassifications')
+    class Meta:
+        db_table = 'classifications'
+        
+class GroupsClassifications(models.Model):
+    id = models.BigIntegerField(primary_key = True)
+    classification = models.ForeignKey(Classification, db_column = 'classificationid')
+    group = models.ForeignKey(Group, db_column = 'groupid')
+    class Meta:
+        db_table = 'groups_classifications'
+
+class Favourite(models.Model):
+    id = models.BigIntegerField(primary_key = True)
+    userid = models.BigIntegerField()
+    hostid = models.BigIntegerField()
+    status = models.IntegerField()
+    # host = models.ForeignKey(Host, db_column = 'hostid')
+    class Meta:
+        db_table = 'favourites'
