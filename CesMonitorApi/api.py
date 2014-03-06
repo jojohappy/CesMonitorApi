@@ -1,9 +1,10 @@
 import datetime
 import time
-from tastypie import fields
+from tastypie import fields, http
 from tastypie.resources import ModelResource
-from tastypie.utils import trailing_slash
+from tastypie.utils import trailing_slash, dict_strip_unicode_keys
 from tastypie.constants import ALL
+from tastypie.authorization import Authorization
 from django.conf.urls import url
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
@@ -395,6 +396,42 @@ class FavouritesResource(ModelResource):
         excludes = []
         include_resource_uri = False
         max_limit = None
+        authorization= Authorization()
+        filtering = {
+            "hostid": ALL,
+            "userid": ALL
+        }
+        # always_return_data = True
         
     def determine_format(self, request):
         return "application/json"
+        
+    def post_list(self, request, **kwargs):
+        deserialized = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
+        deserialized = self.alter_deserialized_detail_data(request, deserialized)
+        bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
+        # bundle.data['userid'] = request.session['userid'];
+        bundle.data['userid'] = 1;
+        bundle.data['status'] = 1;
+        updated_bundle = self.obj_create(bundle, **self.remove_api_resource_names(kwargs))
+        location = self.get_resource_uri(updated_bundle)
+
+        if not self._meta.always_return_data:
+            return http.HttpCreated(location=location)
+        else:
+            updated_bundle = self.full_dehydrate(updated_bundle)
+            updated_bundle = self.alter_detail_data_to_serialize(request, updated_bundle)
+            return self.create_response(request, updated_bundle, response_class=http.HttpCreated, location=location)
+    
+    def obj_delete_list(self, bundle, **kwargs):
+        # userid = request.session['userid'];
+        userid = 1
+        objects_to_delete = self.obj_get_list(bundle=bundle, **kwargs).filter(userid=userid)
+        deletable_objects = self.authorized_delete_list(objects_to_delete, bundle)
+
+        if hasattr(deletable_objects, 'delete'):
+            # It's likely a ``QuerySet``. Call ``.delete()`` for efficiency.
+            deletable_objects.delete()
+        else:
+            for authed_obj in deletable_objects:
+                authed_obj.delete()

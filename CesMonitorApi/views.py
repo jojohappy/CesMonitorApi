@@ -28,7 +28,7 @@ def events_statistics(request):
         events_statistics = Event.event_objects.events_statistics_count(int(fromdate_clock), int(enddate_clock))
     else:
         events_statistics = Event.event_objects.events_statistics_priority(int(fromdate_clock), int(enddate_clock))
-    response_data['events'] = events_statistics
+    response_data['events_statistics'] = events_statistics
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 # ÂÖÑ¯ÇëÇó    

@@ -310,7 +310,7 @@ class GroupsClassifications(models.Model):
 
 class Favourite(models.Model):
     id = models.BigIntegerField(primary_key = True)
-    userid = models.BigIntegerField()
+    userid = models.BigIntegerField(null = True)
     hostid = models.BigIntegerField()
     status = models.IntegerField()
     # host = models.ForeignKey(Host, db_column = 'hostid')
