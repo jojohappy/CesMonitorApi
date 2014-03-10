@@ -33,6 +33,11 @@ def events_statistics(request):
 
 # 轮询请求    
 def dashboard(request):
+    # 主机分类查询
+    # 主机组查询
+    # 主机信息查询 用Resource
+    # 当前告警 用Resource
+    # 告警统计 用Resource
     response_data = {}
     response_data['result'] = 'success'
     return HttpResponse(json.dumps(response_data), content_type="application/json")
