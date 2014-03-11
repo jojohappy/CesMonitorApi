@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="icon" href="{{static_root}}/img/favicon.ico?v=1" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="{{static_root}}/css/index.css" />
+	<title>
+		EVO-Monitor
+	</title>
+</head>
+<body>
+	<!-- DESK TOP begin -->
+	<div id="divDeskTop" class="div-Dest-Top">
+		<div id="divDTLeftTop" class="div-DT-Left-Top">
+			<div id="divDTMainLogoArea" class="div-DT-Main-Logo-Area">
+				<div id="divMLAProjectName" class="div-MLA-Project-Name">
+					EVO-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onitor
+					<img src="{{static_root}}/img/m.png" id="imgMLAProjectLogo" class="img-MLA-Project-Logo">
+				</div>
+				<div id="divMLACompanyName" class="div-MLA-Company-Name">China&nbsp;Etek&nbsp;&nbsp;Service</div>
+			</div>
+			<div id="divDTMainInfoArea" class="div-DT-Main-Info-Area">
+				<div id="divMIALeft" class="div-MIA-Left">
+					<div id="divMIANumberDataArea" class="div-MIA-Number-Data-Area">
+						<div id="divNDAFunctionalNumber" class="div-NDA-Functional-Number">
+							
+						</div>
+						<div id="divNDARight" class="div-NDA-Right">
+							<div id="divNDATotal" class="div-NDA-Total">
+								
+							</div>
+							<div id="divNDARightStaticText" class="div-NDA-Right-Static-Text">
+								
+							</div>
+						</div>
+					</div>
+					<div id="divMIAStaticText" class="div-MIA-Static-Text">个设备正常运行</div>
+				</div>
+				<div id="divMIAChart" class="div-MIA-Chart"></div>
+				<div id="divMIAChartText" class="div-MIA-Chart-Text">
+					
+				</div>
+				<div id="divMIAChartTextStatic" class="div-MIA-Chart-Text-Static">
+					设备正常率
+				</div>
+			</div>
+		</div>
+		<div id="divDTTimeChartArea" class="div-DT-Time-Chart-Area"></div>
+		<div id="divDTIconArea" class="div-DT-Icon-Area">
+			<div id="divAlertListIcon" class="div-DT-Icon">
+				<img src="{{static_root}}/img/alert.png" class="img-DT-Icon-bg">
+				<div id="" class="div-DT-Icon-label">告警列表</div>
+				<div id="divAlertListIconChartInfo" class="div-DT-Icon-chart-Info">31个告警</div>
+			</div>
+			<div id="divAppMonitorIcon" class="div-DT-Icon">
+				<img src="{{static_root}}/img/app.png" class="img-DT-Icon-bg">
+				<div id="" class="div-DT-Icon-label">应用监控</div>
+				<div id="divAppMonitorIconChart" class="div-DT-Icon-chart"></div>
+				<div id="divAppMonitorIconChartInfo" class="div-DT-Icon-chart-Info">18%<br>异常</div>
+			</div>
+			<div id="divEquipmentInfoIcon" class="div-DT-Icon">
+				<img src="{{static_root}}/img/equipment.png" class="img-DT-Icon-bg">
+				<div id="" class="div-DT-Icon-label">设备详细</div>
+			</div>
+			<div id="divFavoritesIcon" class="div-DT-Icon">
+				<img src="{{static_root}}/img/favorites.png" class="img-DT-Icon-bg">
+				<div id="" class="div-DT-Icon-label">收藏夹</div>
+				<div id="divFavoritesIconChart" class="div-DT-Icon-chart"></div>
+				<div id="divFavoritesIconChartInfo" class="div-DT-Icon-chart-Info">2%<br>异常</div>
+			</div>
+			<div id="divSettingIcon" class="div-DT-Icon">
+				<img src="{{static_root}}/img/setting.png" class="img-DT-Icon-bg">
+				<div id="" class="div-DT-Icon-label">设置</div>
+			</div>
+			<!-- 
+				<div id="divAuthorityIcon" class="div-DT-Icon">
+				<img src="img/authority.png" class="img-DT-Icon-bg">
+				<div id="" class="div-DT-Icon-label">权限管理</div>
+				</div>
+			-->
+			
+		</div>
+
+		<div id="divDTAlertListArea" class="div-DT-Alert-List-Area">
+			<div id="divDTAlertListAreaMainTitle" class="div-DT-Alert-List-Area-Main-Title">
+					当前告警列表
+			</div>
+			<div id="divDTAlertListAreaMain" class="div-DT-Alert-List-Area-Main">
+				
+				<div  class="div-DT-Alert-row">
+					<div id="" class="div-DT-Alert-cell">
+						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
+							严重
+						</div>
+						<div id="" class="div-DT-Alert-cell-Equipment">
+							小型机设备-2222222
+						</div>
+						<div id="" class="div-DT-Alert-cell-Time">
+							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
+							2013-2-27 17:32:21
+						</div>
+						<div  id="" class="div-DT-Alert-cell-Info">
+							TESTDB-IBMDEFAULTBP-缓冲池命中率(数据)小于95%
+						</div>
+					</div>
+					<div id="" class="div-DT-Alert-cell">
+						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
+							严重
+						</div>
+						<div id="" class="div-DT-Alert-cell-Equipment">
+							小型机设备-2222222
+						</div>
+						<div id="" class="div-DT-Alert-cell-Time">
+							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
+							2013-2-27 17:32:21
+						</div>
+						<div  id="" class="div-DT-Alert-cell-Info">
+							CPU利用率大于80%
+						</div>
+					</div>
+					<div id="" class="div-DT-Alert-cell">
+						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
+							严重
+						</div>
+						<div id="" class="div-DT-Alert-cell-Equipment">
+							小型机设备-2222222
+						</div>
+						<div id="" class="div-DT-Alert-cell-Time">
+							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
+							2013-2-27 17:32:21
+						</div>
+						<div  id="" class="div-DT-Alert-cell-Info">
+							CPU等待时间百分比大于60%
+						</div>
+					</div>
+					<div id="" class="div-DT-Alert-cell">
+						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
+							严重
+						</div>
+						<div id="" class="div-DT-Alert-cell-Equipment">
+							小型机设备-2222222
+						</div>
+						<div id="" class="div-DT-Alert-cell-Time">
+							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
+							2013-2-27 17:32:21
+						</div>
+						<div  id="" class="div-DT-Alert-cell-Info">
+							/usr/IBM/WebSphere文件系统利用率大于90%
+						</div>
+					</div>
+					<div id="" class="div-DT-Alert-cell">
+						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level3">
+							普通
+						</div>
+						<div id="" class="div-DT-Alert-cell-Equipment">
+							小型机设备-2222222
+						</div>
+						<div id="" class="div-DT-Alert-cell-Time">
+							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
+							2013-2-27 17:32:21
+						</div>
+						<div  id="" class="div-DT-Alert-cell-Info">
+							en0发送的失败的总包数大于90
+						</div>
+					</div>
+					<div id="" class="div-DT-Alert-cell">
+						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level3">
+							普通
+						</div>
+						<div id="" class="div-DT-Alert-cell-Equipment">
+							小型机设备-2222222
+						</div>
+						<div id="" class="div-DT-Alert-cell-Time">
+							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
+							2013-2-27 17:32:21
+						</div>
+						<div  id="" class="div-DT-Alert-cell-Info">
+							en0发送的失败的总包数大于90
+						</div>
+					</div>
+				</div>
+				<div  class="div-DT-Alert-row">
+					<div id="" class="div-DT-Alert-cell">
+						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
+							严重
+						</div>
+						<div id="" class="div-DT-Alert-cell-Equipment">
+							小型机设备-2222222
+						</div>
+						<div id="" class="div-DT-Alert-cell-Time">
+							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
+							2013-2-27 17:32:21
+						</div>
+						<div  id="" class="div-DT-Alert-cell-Info">
+							CPU等待时间百分比大于60%
+						</div>
+					</div>
+					<div id="" class="div-DT-Alert-cell">
+						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
+							严重
+						</div>
+						<div id="" class="div-DT-Alert-cell-Equipment">
+							小型机设备-2222222
+						</div>
+						<div id="" class="div-DT-Alert-cell-Time">
+							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
+							2013-2-27 17:32:21
+						</div>
+						<div  id="" class="div-DT-Alert-cell-Info">
+							TESTDB-IBMDEFAULTBP-缓冲池命中率(数据)小于95%
+						</div>
+					</div>
+					<div id="" class="div-DT-Alert-cell">
+						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
+							严重
+						</div>
+						<div id="" class="div-DT-Alert-cell-Equipment">
+							小型机设备-2222222
+						</div>
+						<div id="" class="div-DT-Alert-cell-Time">
+							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
+							2013-2-27 17:32:21
+						</div>
+						<div  id="" class="div-DT-Alert-cell-Info">
+							en0发送的失败的总包数大于90
+						</div>
+					</div>
+					<div id="" class="div-DT-Alert-cell">
+						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level3">
+							普通
+						</div>
+						<div id="" class="div-DT-Alert-cell-Equipment">
+							小型机设备-2222222
+						</div>
+						<div id="" class="div-DT-Alert-cell-Time">
+							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
+							2013-2-27 17:32:21
+						</div>
+						<div  id="" class="div-DT-Alert-cell-Info">
+							/usr/IBM/WebSphere文件系统利用率大于90%
+						</div>
+					</div>
+					<div id="" class="div-DT-Alert-cell">
+						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level3">
+							普通
+						</div>
+						<div id="" class="div-DT-Alert-cell-Equipment">
+							小型机设备-2222222
+						</div>
+						<div id="" class="div-DT-Alert-cell-Time">
+							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
+							2013-2-27 17:32:21
+						</div>
+						<div  id="" class="div-DT-Alert-cell-Info">
+							TESTDB-IBMSYSTEMBP4K-缓冲池命中率(索引)小于95%
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<div id="divDTAlertListAreaSub" class="div-DT-Alert-List-Area-Sub">
+			</div>
+		</div>
+		<div id="divDTSortChartArea" class="div-DT-Sort-Chart-Area">
+			<div id="" class="div-DT-Sort-Chart-Main-Title">
+					分类总览
+			</div>
+			<div id="divDTSortMainChartArea" class="div-DT-Sort-Main-Chart-Area">
+			</div>
+			<div id="divDTSortSubChartArea" class="div-DT-Sort-Sub-Chart-Area">
+			</div>
+		</div>
+	</div>
+	<!-- DESK TOP end -->
+	<div id="divWindowAlertList" class="div-Window">
+		<div id="divWindowAlertListTitle" class="div-Window-Title">
+			<div id="divWindowAlertListTitleText" class="div-Window-Title-Text">告警列表</div>
+			<div id="divWindowAlertListTitleClose" class="div-Window-Title-Close">╳</div>
+		</div>
+		<div id="divWindowAlertListDetail" class="div-Window-Detail">
+			<div id="divWindowAlertToolbar" class="div-Window-Alert-Toolbar">
+				
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="{{static_root}}/js/jquery.min.js"></script>
+	<script type="text/javascript" src="{{static_root}}/js/highcharts-all.js"></script>
+	<script type="text/javascript" src="{{static_root}}/js/index.js"></script>
+</body>
+</html>

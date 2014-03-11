@@ -20,6 +20,21 @@ from CesMonitorApi.api import HostsResource
 from CesMonitorApi.api import EventsResource
 from CesMonitorApi.api import ClassificationsResource
 
+common_context_dict={}
+
+ext_js_dir_dict={'static_root':'/static', }
+
+common_context_dict.update(ext_js_dir_dict)
+
+def index(request):
+    t=get_template('index.html')
+    context_dict={}
+    context_dict.update(common_context_dict)
+    #context_dict.update(csrf(request))
+    c=Context(context_dict)
+    html=t.render(c)
+    return HttpResponse(html)
+
 # 到当天早上凌晨的每小时告警数量、等级列表
 def events_statistics(request):
     statistics_type = int(request.GET.get('statistics_type', 0))
