@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="icon" href="{{static_root}}/img/favicon.ico?v=1" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="{{static_root}}/css/index.css" />
+	<link rel="stylesheet" type="text/css" href="{{static_root}}/css/flat.css" />
+	<link rel="stylesheet" type="text/css" href="{{static_root}}/css/green.css" />
+	<link rel="stylesheet" type="text/css" href="{{static_root}}/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="{{static_root}}/css/bootstrap-datetimepicker.min.css"/>
+	<title>
+		EVO-Monitor
+	</title>
+	<style type="text/css">
+		.div-report-content{
+			float:left;
+			height:100%;
+			margin-left:7px;
+			border-left: 3px solid rgb(22,160,133);
+		}
+
+		.div-report-content-tool-bar {
+			height:40px;
+		}
+
+		.div-report-content-tab {
+			height:45px;
+			border-bottom: 3px solid rgb(22,160,133);
+		}
+
+		.div-report-content-detail {
+
+		}
+
+		.datetime-label {
+			margin-top:12px;
+			margin-left:6px;
+			margin-right: 6px;
+			float:left;
+		}
+
+		.datetime_picking {
+			width:200px;
+			top:5px;
+			float:left;
+			margin-right: 6px;
+		}
+
+		.div-report-content-tab ul {
+			margin-bottom:0px;
+			height:45px;
+			float: left;
+		}
+
+		.div-report-content-tab ul li {
+			float:left;
+			margin-left:5px;
+			margin-top: 5px;
+			height: 40px;
+			width:120px;
+			cursor: pointer;
+			border: 2px solid rgb(22,160,133);
+			text-align: center;
+			vertical-align: middle;
+			white-space: nowrap;
+			padding-top: 7px;
+			padding-left: 4px;
+			padding-right: 4px;
+			color:rgb(22,160,133);
+		}
+
+		.tab-active {
+			background-color: rgb(22,160,133);
+		}
+
+		.select-report-model {
+			margin-left:6px;
+			margin-top:5px;
+			float:left;
+			margin-right: 6px;
+		}
+
+		.tab-navi {
+			width:40px;
+			float:left;
+			height:35px;
+			margin-top: 10px;
+			text-align: center;
+			vertical-align: middle;
+			background-color:rgb(22,160,133);
+			cursor: pointer;
+		}
+
+		.div-tab-navi {
+			width: 90px;
+			float: right;
+			height: 45px;
+			margin-top: -48px;
+			background-color: white;
+			border-left: 10px solid white;
+		}
+
+		.span-tab-navi {
+			margin-top:6px;
+			font-size:16px;
+			color:white;"
+		}
+
+		.tab-close {
+			margin: -29px 0 0 97px;
+		}
+	</style>
+</head>
+<body  unselectable="on" style="-moz-user-select:none;-webkit-user-select:none;" onselectstart="return false;">
+	<div id="divWindowEquipmentDetailSide" class="div-Window-Detail-Side" style="height:100%;width:200px;">
+		<div id="divWindowEquipmentDetailSideSearch" class="div-Window-Equipment-Detail-Side-Search" style="width:180px;">
+			<input type="text"  id="inputWindowEquipmentDetailSideSearch" class="input-Window-Equipment-Detail-Side-Search" placeholder="搜索监控设备" style="width:174px;">
+			<div id="inputWindowEquipmentDetailSideAll" class="input-Window-Equipment-Detail-Side-All" style="width:200px;">
+			</div>
+		</div>
+	</div>
+	<div id="divReportContent" class="div-report-content">
+		<div id="divReportContentToolBar" class="div-report-content-tool-bar">
+			<div class="datetime-label">开始时间</div>
+			<div class='input-group date datetime_picking'>
+			    <input id="from_datetime" type='text' class="form-control" readonly>
+			    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+			    </span>
+			</div>
+			<div class="datetime-label">结束时间</div>
+			<div class='input-group date datetime_picking'>
+			    <input id="end_datetime" type='text' class="form-control" readonly>
+			    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+			    </span>
+			</div>
+			<div class="select-report-model">
+				<select id="selectReportType" style="height:34px;">
+				 	<option value="AIX_CPU">AIX_CPU</option>
+					<option value="AIX_FENGQU">AIX_FENGQU</option>
+					<option value="LINUX_CPU">LINUX_CPU</option>
+					<option value="WINDOWS_CPU">WINDOWS_CPU</option>
+					<option value="ORACLE_TABLESPACE">ORACLE_TABLESPACE</option>
+				</select>
+			</div>
+			<button id="submit_report" type="button" class="btn btn-primary" style="margin-top:5px;margin-left:5px;">确定</button>
+		</div>
+		<div id="divReportContentTab" class="div-report-content-tab">
+			<ul id="ulReportContentTab">
+				<li class="tab-active" style="color: rgb(255,255,255);">
+					<span>无</span>
+					<div class="tab-close">
+						<span>ㄨ</span>
+					</div>
+				</li>
+				<li>
+					<span>无</span>
+					<div class="tab-close">
+						<span>ㄨ</span>
+					</div>
+				</li>
+				<li>
+					<span>无</span>
+					<div class="tab-close">
+						<span>ㄨ</span>
+					</div>
+				</li>
+				<li>
+					<span>无</span>
+					<div class="tab-close">
+						<span>ㄨ</span>
+					</div>
+				</li>
+				<li>
+					<span>无</span>
+					<div class="tab-close">
+						<span>ㄨ</span>
+					</div>
+				</li>
+				<li>
+					<span>无</span>
+					<div class="tab-close">
+						<span>ㄨ</span>
+					</div>
+				</li>
+				<li>
+					<span>无</span>
+					<div class="tab-close">
+						<span>ㄨ</span>
+					</div>
+				</li>
+				<li>
+					<span>无</span>
+					<div class="tab-close">
+						<span>ㄨ</span>
+					</div>
+				</li>
+				<li>
+					<span>无</span>
+					<div class="tab-close">
+						<span>ㄨ</span>
+					</div>
+				</li>
+				<li>
+					<span>无</span>
+					<div class="tab-close">
+						<span>ㄨ</span>
+					</div>
+				</li>
+				<li>
+					<span>无</span>
+					<div class="tab-close">
+						<span>ㄨ</span>
+					</div>
+				</li>
+				<li>
+					<span>无</span>
+					<div class="tab-close">
+						<span>ㄨ</span>
+					</div>
+				</li>
+			</ul>
+			<div class="div-tab-navi">
+				<div id="naviPrev" class="tab-navi">
+					<div class="span-tab-navi">
+						<span>◀</span>
+					</div>
+				</div>
+				<div id="naviNext" class="tab-navi">
+					<div class="span-tab-navi">
+						<span>▶</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="divReportContentDetail" class="div-report-content-detail">
+		</div>
+	</div>
+	<script type="text/javascript" src="{{static_root}}/js/jquery.min.js"></script>
+	<script type="text/javascript" src="{{static_root}}/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{{static_root}}/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="{{static_root}}/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="{{static_root}}/js/report.js"></script>
+</body>
+</html>

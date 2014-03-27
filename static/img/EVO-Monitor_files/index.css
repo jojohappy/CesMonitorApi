@@ -33,17 +33,6 @@ li{
 	white-space:nowrap;
 }
 
-
-::-webkit-scrollbar {
-    background: none;
-    width: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgb(200,200,200);
-    -webkit-border-radius: 1ex;
-}
-
 .green-background-color{
 	background-color: rgb(22,160,133);
 }
@@ -487,26 +476,21 @@ li{
 .div-Window-Title{
 	height: 34px;
 	width: 100%;
-	cursor: default;
-	border: 1px solid rgb(22,160,133);
+	cursor: move;
 	background-color: rgb(22,160,133);
-	margin-top:-40px;
-	border-radius: 3px;
-	color: white;
-	margin-left:-1px;
 }
 
 .div-Window-Detail{
 	width: 100%;
-	height:486px;
-	margin-top: 10px;
+	height:456px;
 }
 
 .div-Window-Title-Text{
 	width: 100%;
 	height: 100%;
-	font-size: 18px;
-	line-height: 36px;
+	color: white;
+	font-size: 16px;
+	line-height: 34px;
 	text-align: center;
 	cursor: default;
 	letter-spacing:12px;
@@ -514,9 +498,10 @@ li{
 
 .div-Window-Title-Close{
 	position: relative;
+	color: white;
 	font-weight: bold;
 	font-size: 32px;
-	line-height: 36px;
+	line-height: 34px;
 	cursor: pointer;
 	float: right;
 	width:34px;
@@ -678,15 +663,15 @@ li{
 }
 
 .div-Window-Alert-Main{
-	height: 430px;
+	height: 400px;
 	width: 100%;
 	overflow: hidden;
 }
 
 .div-Window-Alert-Cell{
 	width: 100%;
-	height: 43px;
-	line-height: 43px;
+	height: 40px;
+	line-height: 40px;
 	color: rgb(100,100,100);
 	cursor: default;
 	transition: background-color 0.5s;
@@ -711,7 +696,7 @@ li{
 }
 
 .div-Window-Alert-Cell-Level{
-	height: 23px;
+	height: 20px;
 	width: 40px;
 	margin:10px 5px;
 	float: left;
@@ -719,7 +704,7 @@ li{
 	font-size: 10px;
 	overflow:hidden;
 	color: white;
-	line-height: 23px;
+	line-height: 20px;
 	border-radius: 4px;
 }
 
@@ -962,7 +947,7 @@ li{
 
 .div-Window-Detail-Side{
 	width: 180px;
-	height: 484px;
+	height: 100%;
 	float: left;
 }
 
@@ -989,7 +974,7 @@ li{
 
 .ul-Window-Detail-Side{
 	width: 100%;
-	height: 424px;
+	height: 396px;
 	overflow: auto;
 }
 
@@ -1015,13 +1000,13 @@ li{
 
 .div-Window-App-Monitor-Detail-Main-All{
 	width: 670px;
-	height: 486px;
+	height: 456px;
 	float: left;
 }
 
 .div-Window-App-Monitor-Detail-Main-App-Detail{
 	width: 670px;
-	height: 486px;
+	height: 456px;
 	float: left;
 	display: none;
 }
@@ -1045,7 +1030,7 @@ li{
 
 .div-App-Monitor-Detail-Main-Bottom{
 	width: 100%;
-	height:235px;
+	height:200px;
 }
 
 .div-App-Monitor-Detail-Main-Top-Right-Chart{
@@ -1224,7 +1209,7 @@ li{
 
 .div-App-Monitor-Info{
 	width: 100%;
-	height: 286px;
+	height: 256px;
 }
 
 .div-App-Monitor-Info-Title{
@@ -1239,7 +1224,7 @@ li{
 }
 
 .ul-App-Monitor-Info{
-	height: 256px;
+	height: 226px;
 	width: 670px;
 	overflow-y:auto;
 	overflow-x:hidden;
@@ -1311,309 +1296,19 @@ li{
 .div-Window-Equipment-Detail-Side-Search{
 	width: 160px;
 	margin:10px;
-	border:1px solid rgb(220,220,220);
+	border:1px solid rgb(200,200,200);
 	border-radius: 4px;
-	height: 35px;
-	box-shadow: 1px 2px 5px rgba(200,200,200,.5);
+	height: 30px;
 }
 
 .input-Window-Equipment-Detail-Side-Search{
 	border:0px;
 	margin:2px;
-	background-color: transparent;
 	width: 154px;
-	height: 29px;
+	height: 24px;
 	color:rgb(150,150,150);
 	font-size: 16px;
 }
-
-.input-Window-Equipment-Detail-Side-All{
-	height: 437px;
-	width: 180px;
-	overflow:auto;
-}
-
-.div-Equipment-Type{
-	height: auto;
-	width: 160px;
-	clear:both;
-	margin-top: 15px;
-}
-
-.div-Equipment-Type-Title{
-	height: 20px;
-	cursor: pointer;
-}
-
-.div-Equipment-Type-Title-Status{
-	float: left;
-	width: 20px;
-	line-height: 22px;
-	text-align: center;
-	color:rgb(150,150,150);
-	font-size: 18px;
-	font-weight: bold;
-	text-shadow: rgba(50, 50, 50,.5) 1px 1px 3px;
-}
-
-.div-Equipment-Type-Title-Status-Ok{
-	color:rgb(22,160,133);
-}
-
-
-.div-Equipment-Type-Title-Status-Error{
-	color:rgb(255,60,0);
-}
-
-.div-Equipment-Type-Title-Text{
-	float: left;
-	border:1px dashed rgb(220,220,220);
-	height: 20px;
-	line-height: 22px;
-	padding-left:5px;
-	width: 133px;
-	border-radius: 3px;
-	color:rgb(80,80,80);
-}
-
-.div-Equipment-Type-Content{
-	clear:both;
-	height: auto;
-	margin-left: 20px;
-	display: none;
-}
-
-.div-Equipment-Group{
-	height: auto;
-	clear: both;
-	margin-top: 10px;
-}
-
-.div-Equipment-Group-Title{
-	height: 20px;
-	cursor: pointer;
-}
-
-.div-Equipment-Group-Title-Status{
-	float: left;
-	width: 20px;
-	line-height: 22px;
-	text-align: center;
-	color:rgb(150,150,150);
-	font-size: 16px;
-	font-weight: bold;
-	text-shadow: rgba(50, 50, 50,.5) 1px 1px 3px;
-}
-
-.div-Equipment-Group-Title-Status-Ok{
-	color:rgb(22,160,133);
-}
-
-
-.div-Equipment-Group-Title-Status-Error{
-	color:rgb(255,60,0);
-}
-
-.div-Equipment-Group-Title-Text{
-	float: left;
-	border:1px dotted rgb(220,220,220);
-	height: 20px;
-	font-size: 13px;
-	line-height: 22px;
-	padding-left:5px;
-	width: 113px;
-	border-radius: 3px;
-	color:rgb(80,80,80);
-}
-
-.div-Equipment-Group-Content{
-	height: auto;
-	clear:both;
-	margin-left: 10px;
-	display: none;
-}
-
-.div-Equipment-Object{
-	height: 20px;
-	clear:both;
-}
-
-.div-Equipment-Object-Status{
-	float: left;
-	width: 20px;
-	margin-right: 5px;
-	line-height: 22px;
-	text-align: center;
-	color:rgb(255, 214, 0);
-	font-size: 18px;
-	cursor: pointer;
-	margin-top: 10px;
-}
-
-.div-Equipment-Object-Text{
-	float: left;
-	margin-top: 10px;
-	border:1px solid rgb(220,220,220);
-	height: auto;
-	min-height: 20px;
-	word-wrap: break-word; 
-	word-break: normal; 
-	line-height: 22px;
-	font-size: 12px;
-	padding-left:5px;
-	padding-right:5px;
-	width: 93px;
-	border-radius: 3px;
-	cursor: pointer;
-	color:rgb(100,100,100);
-}
-
-.div-Equipment-Object-Text-Ok{
-	color:rgb(22,160,133);
-}
-
-
-.div-Equipment-Object-Text-Error{
-	color:rgb(255,60,0);
-}
-
-.div-Window-Equipment-Detail-Main{
-	width: 670px;
-	height: 484px;
-	float: left;
-}
-
-.div-Window-Equipment-Detail-Main-Top{
-	width: 670px;
-	height: 50px;
-}
-
-.div-Window-Equipment-Detail-Main-Top-Name{
-	height:50px;
-	margin-left: 10px;
-	font-size: 24px;
-	color: rgb(80,80,80);
-	line-height: 60px;
-	float: left;
-}
-
-.div-Window-Equipment-Detail-Main-Top-IP{
-	height:50px;
-	font-size: 14px;
-	color: rgb(150,150,150);
-	line-height: 68px;
-	float: left;
-	margin-left: 5px;
-}
-
-.div-Window-Equipment-Detail-Main-Middle{
-	width: 670px;
-	height: 340px;
-}
-
-.div-Window-Equipment-Label-High{
-	margin-top: 0px;
-	height: 38px;
-	line-height: 36px;
-	font-size: 15px;
-	color:rgb(120,120,120);
-	box-shadow: none;
-}
-
-.div-Window-Equipment-Label-Low{
-	margin-top: 10px;
-	height: 28px;
-	line-height: 30px;
-	font-size: 13px;
-	color:rgb(180,180,180);
-	box-shadow: 0 -1px 3px rgba(50,50,50,.2) inset;
-}
-
-.div-Window-Equipment-Base-Info{
-	float: left;
-	background-color: white;
-	text-align: center;
-	width: 100px;
-	margin-left:10px;
-	border: 1px solid rgb(200,200,200);
-	border-bottom-color: white;
-	border-radius: 3px 3px 0 0;
-	cursor: pointer;
-	transition: all .2s;
-	-moz-transition: all .2s; /* Firefox 4 */
-	-webkit-transition: all .2s; /* Safari 和 Chrome */
-	-o-transition: all .2s; /* Opera */
-}
-
-.div-Window-Equipment-Base-Info:hover{
-	margin-top: 0px;
-	height: 38px;
-	line-height: 36px;
-	font-size: 15px;
-	color:rgb(120,120,120);
-}
-
-.div-Window-Equipment-Charts{
-	float: left;
-	text-align: center;
-	background-color: white;
-	width: 100px;
-	border: 1px solid rgb(200,200,200);
-	margin-left: 5px;
-	border-radius: 3px 3px 0 0;
-	cursor: pointer;
-	transition: all .2s;
-	-moz-transition: all .2s; /* Firefox 4 */
-	-webkit-transition: all .2s; /* Safari 和 Chrome */
-	-o-transition: all .2s; /* Opera */
-}
-
-.div-Window-Equipment-Charts:hover{
-	margin-top: 0px;
-	height: 38px;
-	line-height: 36px;
-	font-size: 15px;
-	color:rgb(120,120,120);
-}
-
-.div-Window-Equipment-Item{
-	float: left;
-	text-align: center;
-	background-color: white;
-	width: 100px;
-	border: 1px solid rgb(200,200,200);
-	margin-left: 5px;
-	border-radius: 3px 3px 0 0;
-	cursor: pointer;
-	transition: all .2s;
-	-moz-transition: all .2s; /* Firefox 4 */
-	-webkit-transition: all .2s; /* Safari 和 Chrome */
-	-o-transition: all .2s; /* Opera */
-}
-
-.div-Window-Equipment-Item:hover{
-	margin-top: 0px;
-	height: 38px;
-	line-height: 36px;
-	font-size: 15px;
-	color:rgb(120,120,120);
-}
-
-.div-Window-Equipment-Display-Area{
-	position: relative;
-	z-index: -1;
-	width: 658px;
-	height: 310px;
-	border: 1px solid rgb(200,200,200);
-	top:39px;
-	box-shadow: 1px 2px 5px rgba(50,50,50,.3);
-}
-
-.div-Window-Equipment-Detail-Main-Bottom{
-	width: 670px;
-	height: 94px;
-}
-
 
 
 

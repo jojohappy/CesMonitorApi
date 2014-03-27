@@ -29,4 +29,5 @@ urlpatterns = patterns('',
     url(r'^api/dashboard/$', 'CesMonitorApi.views.dashboard'),
     url(r'^$', 'CesMonitorApi.views.index'),
     url(r'^index/$','CesMonitorApi.views.index'),
+    url(r'^report/$','CesMonitorApi.views.report'),
 )

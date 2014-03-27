@@ -87,12 +87,11 @@ var initDomEvent = function() {
     /* 告警列表Icon点击事件 */
     $('#divAlertListIcon').click(function(event) {
         var tempArray = [];
-        $('.div-Window-Title').css('background-color','rgb(240,240,240)').css('color','rgb(180,180,180)');
-        $('#divWindowAlertListTitle').css('background-color',_GLOBE_DATA('colorMainGreen')).css('color','white');
         for (var tempItem in _GLOBE_DATA('windowArray')) {
             if (_GLOBE_DATA('windowArray')[tempItem].attr('id') !== 'divWindowAlertList') {
                 tempArray.push(_GLOBE_DATA('windowArray')[tempItem]);
             } else {
+                console.log('222');
                 tempArray.splice(0, 0, _GLOBE_DATA('windowArray')[tempItem]);
             }
         }
@@ -120,8 +119,6 @@ var initDomEvent = function() {
 
     $('#divWindowAlertList').bind('mousedown',
     function(event) {
-        $('.div-Window-Title').css('background-color','rgb(240,240,240)').css('color','rgb(180,180,180)');
-        $('#divWindowAlertListTitle').css('background-color',_GLOBE_DATA('colorMainGreen')).css('color','white');
         var tempArray = [];
         for (var tempItem in _GLOBE_DATA('windowArray')) {
             if (_GLOBE_DATA('windowArray')[tempItem].attr('id') !== 'divWindowAlertList') {
@@ -217,8 +214,6 @@ var initDomEvent = function() {
 
     /* 应用Icon点击事件 */
     $('#divAppMonitorIcon').click(function(event) {
-        $('.div-Window-Title').css('background-color','rgb(240,240,240)').css('color','rgb(180,180,180)');
-        $('#divWindowAppMonitorTitle').css('background-color',_GLOBE_DATA('colorMainGreen')).css('color','white');
         var tempArray = [];
         for (var tempItem in _GLOBE_DATA('windowArray')) {
             if (_GLOBE_DATA('windowArray')[tempItem].attr('id') !== 'divWindowAppMonitor') {
@@ -256,8 +251,6 @@ var initDomEvent = function() {
 
     $('#divWindowAppMonitor').bind('mousedown',
     function(event) {
-        $('.div-Window-Title').css('background-color','rgb(240,240,240)').css('color','rgb(180,180,180)');
-        $('#divWindowAppMonitorTitle').css('background-color',_GLOBE_DATA('colorMainGreen')).css('color','white');
         var tempArray = [];
         for (var tempItem in _GLOBE_DATA('windowArray')) {
             if (_GLOBE_DATA('windowArray')[tempItem].attr('id') !== 'divWindowAppMonitor') {
@@ -340,8 +333,6 @@ var initDomEvent = function() {
 
     /* 设备详细Icon点击事件 */
     $('#divEquipmentInfoIcon').click(function(event) {
-        $('.div-Window-Title').css('background-color','rgb(240,240,240)').css('color','rgb(180,180,180)');
-        $('#divWindowEquipmentTitle').css('background-color',_GLOBE_DATA('colorMainGreen')).css('color','white');
         var tempArray = [];
         for (var tempItem in _GLOBE_DATA('windowArray')) {
             if (_GLOBE_DATA('windowArray')[tempItem].attr('id') !== 'divWindowEquipment') {
@@ -372,8 +363,6 @@ var initDomEvent = function() {
 
     $('#divWindowEquipment').bind('mousedown',
     function(event) {
-        $('.div-Window-Title').css('background-color','rgb(240,240,240)').css('color','rgb(180,180,180)');
-        $('#divWindowEquipmentTitle').css('background-color',_GLOBE_DATA('colorMainGreen')).css('color','white');
         var tempArray = [];
         for (var tempItem in _GLOBE_DATA('windowArray')) {
             if (_GLOBE_DATA('windowArray')[tempItem].attr('id') !== 'divWindowEquipment') {
@@ -429,22 +418,7 @@ var initDomEvent = function() {
         $(document).unbind('mousemove');
     });
 
-    $('.div-Equipment-Type-Title').bind('click',
-    function(event) {
-        $($(this).next()).slideToggle(200);
-        $($(this).children('.div-Equipment-Type-Title-Status')).html($($(this).children('.div-Equipment-Type-Title-Status')).html()==='+'?'—':'+');
-    });
 
-    $('.div-Equipment-Group-Title').bind('click',
-    function(event) {
-        $($(this).next()).slideToggle(200);
-        $($(this).children('.div-Equipment-Group-Title-Status')).html($($(this).children('.div-Equipment-Group-Title-Status')).html()==='+'?'—':'+');
-    });
-
-    $('.div-Equipment-Object-Status').bind('click',
-    function(event) {
-       $(this).html($(this).html()==='✩'?'✭':'✩');
-    });
 };
 
 var initDomSize = function() {
