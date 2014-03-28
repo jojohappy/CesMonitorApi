@@ -49,15 +49,16 @@
 		.div-report-content-tab ul {
 			margin-bottom:0px;
 			height:45px;
-			float: left;
+			overflow: hidden;
+			white-space: nowrap;
 		}
 
 		.div-report-content-tab ul li {
-			float:left;
+			display: inline-block;
 			margin-left:5px;
 			margin-top: 5px;
 			height: 40px;
-			width:120px;
+			width:160px;
 			cursor: pointer;
 			border: 2px solid rgb(22,160,133);
 			text-align: center;
@@ -107,7 +108,7 @@
 		}
 
 		.tab-close {
-			margin: -29px 0 0 97px;
+			margin: -30px 0 0 142px;
 		}
 	</style>
 </head>
@@ -123,102 +124,37 @@
 		<div id="divReportContentToolBar" class="div-report-content-tool-bar">
 			<div class="datetime-label">开始时间</div>
 			<div class='input-group date datetime_picking'>
-			    <input id="from_datetime" type='text' class="form-control" readonly>
+			    <input id="from_datetime" type='text' class="form-control" style="cursor: default;" readonly>
 			    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
 			    </span>
 			</div>
 			<div class="datetime-label">结束时间</div>
 			<div class='input-group date datetime_picking'>
-			    <input id="end_datetime" type='text' class="form-control" readonly>
+			    <input id="end_datetime" type='text' class="form-control" style="cursor: default;" readonly>
 			    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
 			    </span>
 			</div>
 			<div class="select-report-model">
-				<select id="selectReportType" style="height:34px;">
-				 	<option value="AIX_CPU">AIX_CPU</option>
-					<option value="AIX_FENGQU">AIX_FENGQU</option>
-					<option value="LINUX_CPU">LINUX_CPU</option>
-					<option value="WINDOWS_CPU">WINDOWS_CPU</option>
-					<option value="ORACLE_TABLESPACE">ORACLE_TABLESPACE</option>
+				<select id="selectReportType" style="margin-top:7px;">
+				 	<option value="AIX_CPU">AIX-CPU报表</option>
+					<option value="AIX_FENGQU">AIX磁盘分区报表</option>
+					<option value="LINUX_CPU">LINUX-CPU报表</option>
+					<option value="WINDOWS_CPU">WINDOWS-CPU报表</option>
+					<option value="ORACLE_TABLESPACE">ORACLE-表空间报表</option>
 				</select>
 			</div>
 			<button id="submit_report" type="button" class="btn btn-primary" style="margin-top:5px;margin-left:5px;">确定</button>
 		</div>
 		<div id="divReportContentTab" class="div-report-content-tab">
 			<ul id="ulReportContentTab">
-				<li class="tab-active" style="color: rgb(255,255,255);">
+				<li title="none" class="tab-active" style="color: rgb(255,255,255);">
 					<span>无</span>
 					<div class="tab-close">
-						<span>ㄨ</span>
+						<span>X</span>
 					</div>
 				</li>
-				<li>
-					<span>无</span>
-					<div class="tab-close">
-						<span>ㄨ</span>
-					</div>
-				</li>
-				<li>
-					<span>无</span>
-					<div class="tab-close">
-						<span>ㄨ</span>
-					</div>
-				</li>
-				<li>
-					<span>无</span>
-					<div class="tab-close">
-						<span>ㄨ</span>
-					</div>
-				</li>
-				<li>
-					<span>无</span>
-					<div class="tab-close">
-						<span>ㄨ</span>
-					</div>
-				</li>
-				<li>
-					<span>无</span>
-					<div class="tab-close">
-						<span>ㄨ</span>
-					</div>
-				</li>
-				<li>
-					<span>无</span>
-					<div class="tab-close">
-						<span>ㄨ</span>
-					</div>
-				</li>
-				<li>
-					<span>无</span>
-					<div class="tab-close">
-						<span>ㄨ</span>
-					</div>
-				</li>
-				<li>
-					<span>无</span>
-					<div class="tab-close">
-						<span>ㄨ</span>
-					</div>
-				</li>
-				<li>
-					<span>无</span>
-					<div class="tab-close">
-						<span>ㄨ</span>
-					</div>
-				</li>
-				<li>
-					<span>无</span>
-					<div class="tab-close">
-						<span>ㄨ</span>
-					</div>
-				</li>
-				<li>
-					<span>无</span>
-					<div class="tab-close">
-						<span>ㄨ</span>
-					</div>
-				</li>
-			</ul>
+				
+			</div>
 			<div class="div-tab-navi">
 				<div id="naviPrev" class="tab-navi">
 					<div class="span-tab-navi">
@@ -231,8 +167,10 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div id="divReportContentDetail" class="div-report-content-detail">
+			<div id="divReportContentDetail" class="div-report-content-detail">
+				<div id="div-10111">
+				</div>
+			</div>
 		</div>
 	</div>
 	<script type="text/javascript" src="{{static_root}}/js/jquery.min.js"></script>
