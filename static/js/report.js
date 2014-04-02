@@ -82,13 +82,14 @@ var initDomEvent = function() {
                 var str_report_div="";
 
                 var report_type_url;
-                if(report_type == "AIX_CPU" || report_type == "LINUX_CPU" || report_type == "WINDOWS_CPU")
+                if(report_type == "CPU" || report_type == "AIX_CPU" || report_type == "LINUX_CPU" || report_type == "WINDOWS_CPU")
                     report_type_url = "cpu";
                 else if(report_type == "AIX_FENGQU")
                     report_type_url = "fenqu";
                 else if(report_type == "ORACLE_TABLESPACE")
                     report_type_url = "oraclets";
-                var iframe_url = "http://172.17.11.211/birt-viewer/frameset?__report=Report\\" + report_type_url + ".rptdesign&host=" + id + "&start="+from_datetime+"&end=" + end_datetime;
+                var iframe_url = "http://172.17.10.61:8080/reports/frameset?__report=report/" + report_type_url + ".rptdesign&host=" + id + "&start="+from_datetime+"&end=" + end_datetime;
+                //var iframe_url = "http://172.17.11.211/birt-viewer/frameset?__report=Report\\" + report_type_url + ".rptdesign&host=" + id + "&start="+from_datetime+"&end=" + end_datetime;
                 if(index == 0) {
                     str_report_div = "<div id=\""+ divId + "\" style=\"display:block;\"><iframe src=\"" + iframe_url + "\" width=\"100%\" height=\""+iframe_height+"px\"></iframe></div>";
                 }

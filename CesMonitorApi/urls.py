@@ -11,6 +11,7 @@ events_resource = EventsResource()
 apps_resource = ApplicationsResource()
 classifications_resource = ClassificationsResource()
 favourites_resource = FavouritesResource()
+graphs_resource = GraphsResource()
 
 urlpatterns = patterns('',
     # Examples:
@@ -25,6 +26,7 @@ urlpatterns = patterns('',
     url(r'^api/', include(apps_resource.urls)),
     url(r'^api/', include(classifications_resource.urls)),
     url(r'^api/', include(favourites_resource.urls)),
+    url(r'^api/', include(graphs_resource.urls)),
     url(r'^api/events_statistics/$', 'CesMonitorApi.views.events_statistics'),
     url(r'^api/dashboard/$', 'CesMonitorApi.views.dashboard'),
     url(r'^$', 'CesMonitorApi.views.index'),

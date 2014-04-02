@@ -226,7 +226,7 @@ class EventManager(models.Manager):
     def current_events(self):
         cursor = connection.cursor()
         cursor.execute("""
-            select a.eventid from events_view a, triggers t where a.value=1 and a.tr_status=0 and a.triggerid=t.triggerid and a.clock = t.lastchange;""")
+            select a.eventid from events_view a, triggers t where a.value=1 and  a.tr_status=0 and a.triggerid=t.triggerid and a.clock = t.lastchange;""")
         row = [row[0] for row in cursor.fetchall()]
         queryset = Event.objects.filter(pk__in = row)
         return queryset
@@ -263,13 +263,15 @@ class Event(models.Model):
     status = models.CharField(max_length = 16)
     priority = models.IntegerField(default = 0)
     information = models.CharField(max_length = 255)
-    during_clock = models.IntegerField(default = 0)
+    during_clock = models.CharField(max_length = 255)
     acknowledged = models.IntegerField(default = 0)
     tr_status = models.IntegerField(default = 0)
     value = models.IntegerField(default = 0)
     #trigger = models.ForeignKey(Trigger, db_column = 'triggerid', null = True, blank=True)
     triggerid = models.BigIntegerField()
     hostid = models.BigIntegerField()
+    itemid = models.BigIntegerField()
+    host = models.CharField(max_length = 255)
     item = models.OneToOneField(Item, db_column = 'itemid', null = True)
     # host = models.OneToOneField(Host, db_column = 'hostid', null = True)
     event_objects = EventManager()
@@ -316,3 +318,84 @@ class Favourite(models.Model):
     # host = models.ForeignKey(Host, db_column = 'hostid')
     class Meta:
         db_table = 'favourites'
+
+class Mappings(models.Model):
+    mappingid = models.BigIntegerField(primary_key = True)
+    valuemapid = models.BigIntegerField()
+    value = models.CharField(max_length = 255)
+    newvalue = models.CharField(max_length = 255)
+
+    class Meta:
+        db_table = 'mappings'
+
+class GraphsManager(models.Manager):
+    def list_graphs(self, hostid):
+        cursor = connection.cursor()
+        cursor.execute("""
+            SELECT 
+            DISTINCT g.graphid 
+        FROM graphs g, 
+             graphs_items gi, 
+             items i 
+        WHERE 
+            ((g.graphid BETWEEN 000000000000000 AND 099999999999999)) 
+            AND (i.hostid = %s) 
+            AND gi.graphid=g.graphid 
+            AND i.itemid=gi.itemid 
+        ORDER BY g.name DESC;""", [int(hostid)])
+        row = [row[0] for row in cursor.fetchall()]
+        queryset = Graphs.objects.filter(pk__in = row)
+        return queryset
+
+    def list_graphs_itemid(self, graphid):
+        cursor = connection.cursor()
+        cursor.execute("""
+            SELECT 
+            g.gitemid, g.graphid, g.itemid, g.drawtype, g.sortorder, g.color, g.yaxisside, g.calc_fnc, g.type, g.periods_cnt 
+        FROM 
+            graphs_items g 
+        WHERE 
+            g.graphid=%s
+        ORDER BY g.sortorder;""", [int(graphid)])
+        graphs_items = []
+        
+        for row in cursor.fetchall():
+            graphs_item = {}
+            graphs_item['gitemid'] = row[0]
+            graphs_item['graphid'] = row[1]
+            graphs_item['itemid'] = row[2]
+            graphs_item['drawtype'] = row[3]
+            graphs_item['sortorder'] = row[4]
+            graphs_item['color'] = row[5]
+            graphs_item['yaxisside'] = row[6]
+            graphs_item['calc_fnc'] = row[7]
+            graphs_item['type'] = row[8]
+            graphs_item['periods_cnt'] = row[9]
+            graphs_items.append(graphs_item)
+        return graphs_items
+    
+
+class Graphs(models.Model):
+    graphid = models.BigIntegerField(primary_key = True)
+    name = models.CharField(max_length = 255)
+    width = models.IntegerField()
+    height = models.IntegerField()
+    yaxismin = models.FloatField()
+    yaxismax = models.FloatField()
+    templateid = models.BigIntegerField()
+    show_work_period = models.IntegerField()
+    show_triggers = models.IntegerField()
+    graphtype = models.IntegerField()
+    show_legend = models.IntegerField()
+    show_3d = models.IntegerField()
+    percent_left = models.FloatField()
+    percent_right = models.FloatField()
+    ymin_type = models.IntegerField()
+    ymax_type = models.IntegerField()
+    ymin_itemid = models.BigIntegerField()
+    ymax_itemid = models.BigIntegerField()
+    graphs_objects = GraphsManager()
+    objects = models.Manager()
+
+    class Meta:
+        db_table = 'graphs'

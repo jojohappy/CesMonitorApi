@@ -1,5 +1,10 @@
+# coding=utf-8
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 import datetime
 import time
+import traceback,math
 from tastypie import fields, http
 from tastypie.resources import ModelResource
 from tastypie.utils import trailing_slash, dict_strip_unicode_keys
@@ -11,8 +16,206 @@ from django.http import Http404
 from django.db.models import Q
 from CesMonitorApi.models import *
 
+pow_unit = (-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8)
+units = ('', 'n', 'l', 'm', '', 'K', 'M', 'G', 'T', 'P','E', 'Z', 'Y')
+map = {'B': 0,'KB': 1,'MB': 2,'GB': 3,'TB': 4,'PB': 5,'EB': 6,'ZB': 7,'YB': 8,'Bps': 0,'KBps': 1,'MBps': 2,'GBps': 3,'TBps': 4,'PBps': 5,'EBps': 6,'ZBps': 7,'YBps': 8,'qps': 0,'Kqps': 1,'Mqps': 2,'Gqps': 3,'Tqps': 4,'Pqps': 5,'Eqps': 6,'Zqps': 7,'Yqps': 8}
+mapUnit = {'': 0,'K': 1,'M': 2,'G': 3,'T': 4,'P': 5,'E': 6,'Z': 7,'Y': 8}
+
+# 时间转换 从秒转为YYYY-MM-DD HH:mm:SS
 def convert_int_to_datetime(origin_datetime):
     return datetime.datetime.fromtimestamp(origin_datetime).strftime('%Y-%m-%d %H:%M:%S')
+
+# 监控数据格式转换
+def convert_units(value, itemunits):
+    convert = 0
+    if itemunits == "unixtime":
+        try:
+            convert_int_to_datetime(origin_datetime=long(value))
+        except:
+            return ""
+    if itemunits == "uptime":
+        return convertUnitsUptime(value=value)
+        
+
+    if itemunits == "s":
+        return convertUnitsS(value=value)
+    blackList = []
+    blackList.append("%")
+    blackList.append("ms")
+    blackList.append("rpm")
+    blackList.append("RPM")
+    if itemunits in blackList or len(itemunits) == 0:
+        if abs(float(value)) >= 0.01:
+            value = "%.2f" % (round(float(value) * 100) / 100.00)
+        else:
+            value = "%.6f" % float(value)
+
+        if float(value) == 0:
+            value = "0"
+        if value.endswith(".00"):
+            value = value[0 : len(value) - 3]
+        
+        if len(itemunits) == 0:
+            return value
+        else:
+            return value + itemunits
+
+    step = 0
+    if itemunits == "Bps" or itemunits == "B" or itemunits == "qps" or itemunits == "ips" or itemunits == "sps":
+        step = 1024
+        convert = 1
+    else:
+        convert = 1
+        step = 1000
+        
+    valueTmp = []
+    for p in pow_unit:
+        valueTmp.append(step ** p)
+
+    abs_v = 0;
+    if float(value) < 0:
+        abs_v = float(value) * -1
+    else:
+        abs_v = float(value)
+
+    valUnit = float(value)
+    index = 0
+    index_v = 0
+    if abs_v > 999 or abs_v < 0.001 :
+        for v in valueTmp:
+            if abs_v >= v :
+                index = index_v + 1
+                valUnit = v
+            else:
+                break
+            index_v += 1
+
+    if round(valUnit * 1000000) / 1000000.00000000 > 0 :
+        valUnit = float("%.6f" % (float(value) / valUnit))
+    else:
+        valUnit = 0
+
+    desc = ""
+    if convert == 0:
+        itemunits = itemunits.strip()
+    if convert == 1:
+        desc = units[index]
+
+    valUnit = round(valUnit * 100) / 100.00
+    return "%.2f%s%s" % (valUnit, desc, itemunits)
+
+def convertUnitsUptime(value):
+    secs = round(float(value))
+    if secs < 0:
+        value = "-"
+        secs = secs * -1
+    else:
+        value = ""
+    days = math.floor(secs / 86400.0)
+    print days
+    secs -= days * 86400.0
+
+    hours = math.floor(secs / 3600.0)
+    secs -= hours * 3600.0
+
+    mins = math.floor(secs / 60.0)
+    secs -= mins * 60.0
+
+    finalValue = ""
+    if int(days) != 0:
+        finalValue = "%d%s" % (int(days), "天,")
+    finalValue = "%s%02d:%02d:%02d" % (finalValue,int(hours), int(mins), secs)
+    return finalValue
+
+def convertUnitsS(value):
+    finalValue = ""
+    if math.floor(abs(float(value)) * 1000) == 0:
+        finalValue = "0秒" if float(value) == 0 else "< 1毫秒"
+        return finalValue;
+
+    secs = round(float(value) * 1000) / 1000
+    if secs < 0:
+        value = "-"
+        secs = secs * -1
+    else:
+        value = ""
+
+    n_unit = 0
+    n = math.floor(secs / 31536000.0)
+    if n != 0:
+        value += int(n) + "年 "
+        secs -= int(n) * 31536000
+        if 0 == n_unit:
+            n_unit = 4
+
+    n = math.floor(secs / 2592000.0)
+    if n != 0:
+        value += int(n) + "月 "
+        secs -= int(n) * 2592000
+        if 0 == n_unit:
+            n_unit = 3
+
+    n = math.floor(secs / 86400.0)
+    if n != 0:
+        value += int(n) + "天 "
+        secs -= int(n) * 86400
+        if 0 == n_unit:
+            n_unit = 2
+
+    n = math.floor(secs / 3600.0)
+    if n_unit < 4 and n != 0:
+        value += int(n) + "小时 "
+        secs -= int(n) * 3600
+        if 0 == n_unit:
+            n_unit = 1
+
+    n = math.floor(secs / 60.0)
+    if n_unit < 3 and n != 0:
+        value += int(n) + "分 "
+        secs -= int(n) * 60
+
+    n = math.floor(secs / 1.0)
+    if n_unit < 2 and n != 0:
+        value += int(n) + "秒 "
+        secs -= int(n)
+    
+    n = math.floor(secs * 1000.0)
+    if n_unit < 1 and n != 0:
+        value += int(n) + "毫秒"
+
+    finalValue = value
+    return finalValue
+
+def format_lastvalue(lastvalue, itemunits,value_type, valuemapid):
+    finalValue = ""
+    if lastvalue != "" and lastvalue != None:
+        if int(valuemapid) > 0:
+            finalValue = replace_value_by_map(value=lastvalue, valuemapid=valuemapid)
+        elif value_type == 0 :
+            finalValue = convert_units(value=lastvalue, itemunits=itemunits)
+        elif value_type == 3:
+            finalValue = convert_units(value=lastvalue, itemunits=itemunits)
+        elif value_type == 1 or value_type == 4 or value_type == 2:
+            finalValue = lastvalue
+        else:
+            finalValue = lastvalue
+        
+    else:
+        finalValue = "-"
+    
+    return finalValue
+
+def replace_value_by_map(value, valuemapid):
+    if int(valuemapid) < 1:
+        return value
+    try:
+        mappings = Mappings.objects.get(valuemapid=int(valuemapid),value=value)
+        return mappings.newvalue + "(" + value + ")"
+    except:
+        pass
+
+    return value
+
 
 class GroupsResource(ModelResource):
     hosts = fields.OneToManyField('CesMonitorApi.api.HostsResource', 'hosts', full = True, null = True)
@@ -26,6 +229,19 @@ class GroupsResource(ModelResource):
 
     def determine_format(self, request):
         return "application/json"
+
+    def dehydrate(self, bundle):
+        try:
+            hosts = bundle.data['hosts']
+            e_num = 0
+            for host in hosts:
+                if len(host.data['events']) > 0:
+                    e_num += 1
+            bundle.data['e_num'] = e_num
+        except :
+            traceback.print_exc()
+            pass
+        return bundle
 
 class HostsResource(ModelResource):
     hostsProfiles = fields.OneToOneField('CesMonitorApi.api.HostsProfilesResource', 'hosts_profiles', full = True, null = True)
@@ -216,16 +432,29 @@ class ItemsResource(ModelResource):
         to_be_serialized = {
             'event': event_bundle
         }
-        item_obj = event_bundle.data['items']
-        to_be_serialized['item'] = item_obj
-        event_bundle.data['items'] = None
+        itemid = event_bundle.data['itemid']
+        print itemid
+        item_obj = Item.objects.get(itemid=itemid)
+        item_resource = ItemsResource()
+        item_bundle = item_resource.build_bundle(obj=item_obj, request=request)
+        item = item_resource.full_dehydrate(item_bundle, for_list=False)
+        #item_obj = event_bundle.data['items']
+        to_be_serialized['item'] = item
+        #event_bundle.data['items'] = None
         to_be_serialized = self.alter_detail_data_to_serialize(request, to_be_serialized)
         return self.create_response(request, to_be_serialized)
     
     def dehydrate(self, bundle):
         try:
+            lastvalue = bundle.data['lastvalue']
+            prevvalue = bundle.data['prevvalue']
+            if (int(bundle.data['value_type']) == 0 or int(bundle.data['value_type']) == 3) and lastvalue != "" and prevvalue != "" and lastvalue != None and prevvalue != None:
+                bundle.data['change_value'] = format_lastvalue(lastvalue=(float(lastvalue)-float(prevvalue)), itemunits=bundle.data['units'],value_type=bundle.data['value_type'], valuemapid=bundle.data['valuemapid'])
+            else:
+                bundle.data['change_value'] = '-'
             bundle.data['lastclock'] = convert_int_to_datetime(origin_datetime=int(bundle.data['lastclock']))
-        except :
+            bundle.data['lastvalue'] = format_lastvalue(lastvalue=bundle.data['lastvalue'], itemunits=bundle.data['units'],value_type=bundle.data['value_type'], valuemapid=bundle.data['valuemapid'])
+        except:
             pass
         return bundle
         
@@ -247,7 +476,7 @@ class ItemHistoryResource(ModelResource):
         
 class EventsResource(ModelResource):
     # host = fields.OneToOneField('CesMonitorApi.api.HostsResource', 'host', full = True, null = True)
-    items = fields.OneToOneField('CesMonitorApi.api.ItemsResource', 'item', full = True, null = True)
+    # items = fields.OneToOneField('CesMonitorApi.api.ItemsResource', 'item', full = True, null = True)
     class Meta:
         queryset = Event.objects.all()
         resource_name = 'events'
@@ -315,7 +544,7 @@ class EventsResource(ModelResource):
         for obj in to_be_serialized[self._meta.collection_name]:
             bundle = self.build_bundle(obj=obj, request=request)
             bundles.append(self.full_dehydrate(bundle, for_list=True))
-
+        
         to_be_serialized[self._meta.collection_name] = bundles
         to_be_serialized = self.alter_list_data_to_serialize(request, to_be_serialized)
         return self.create_response(request, to_be_serialized)
@@ -329,6 +558,23 @@ class EventsResource(ModelResource):
     def dehydrate(self, bundle):
         try:
             bundle.data['clock'] = convert_int_to_datetime(origin_datetime=int(bundle.data['clock']))
+            #event_hostid = bundle.data['hostid']
+            #event_host = Host.objects.get(hostid=event_hostid)
+            #bundle.data['host'] = event_host.host
+            during_clock = int(bundle.data['during_clock'])
+            during_day = int(during_clock / 86400)
+            during_clock = during_clock % 86400
+            during_hour = int(during_clock / 3600)
+            during_clock = during_clock % 3600
+            during_min = int(during_clock / 60)
+            during_clock = during_clock % 60
+            unicode_string_day = unicode("天",'utf-8')
+            unicode_string_hour = unicode("小时",'utf-8')
+            unicode_string_minute = unicode("分",'utf-8')
+            unicode_string_second = unicode("秒",'utf-8')
+            during_clock_str = str(during_day) + unicode_string_day + str(during_hour) + unicode_string_hour + str(during_min) + unicode_string_minute + str(during_clock) + unicode_string_second
+            unicode_string = during_clock_str.encode('utf-8')
+            bundle.data['during_clock'] = unicode_string
         except :
             pass
         return bundle
@@ -411,6 +657,17 @@ class ClassificationsResource(ModelResource):
     def determine_format(self, request):
         return "application/json"
 
+    def dehydrate(self, bundle):
+        try:
+            groups = bundle.data['groups']
+            e_num = 0
+            for group in groups:
+                e_num += group.data['e_num']
+            bundle.data['e_num'] = e_num
+        except :
+            pass
+        return bundle
+
 class FavouritesResource(ModelResource):
     # host = fields.OneToOneField('CesMonitorApi.api.HostsResource', 'hosts', full = True, null = True)
     class Meta:
@@ -459,3 +716,78 @@ class FavouritesResource(ModelResource):
         else:
             for authed_obj in deletable_objects:
                 authed_obj.delete()
+
+class GraphsResource(ModelResource):
+    class Meta:
+        queryset = Graphs.objects.all()
+        resource_name = 'graphs'
+        collection_name = 'graphs'
+        excludes = []
+        include_resource_uri = False
+        max_limit = None
+        filtering = {
+            "hostid": ALL
+        }
+
+    def determine_format(self, request):
+        return "application/json"
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/host/(?P<%s>.*?)%s$" % (self._meta.resource_name, self._meta.detail_uri_name, trailing_slash()), self.wrap_view('get_host_graphs'), name="api_dispatch_detail_graphs_host"),
+        ]
+
+    def get_host_graphs(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+        base_bundle = self.build_bundle(request=request)
+        
+        # objects = self.get_object_list(request).filter(hostid = kwargs['pk']).order_by(sort)
+        objects = Graphs.graphs_objects.list_graphs(kwargs['pk'])._clone()
+        sorted_objects = self.apply_sorting(objects, options=request.GET)
+        paginator = self._meta.paginator_class(request.GET, sorted_objects, resource_uri=self.get_resource_uri(), limit=request.GET.get('limit', 0), max_limit=self._meta.max_limit, collection_name=self._meta.collection_name)
+        to_be_serialized = paginator.page()
+
+        bundles = []
+
+        for obj in to_be_serialized[self._meta.collection_name]:
+            bundle = self.build_bundle(obj=obj, request=request)
+            bundles.append(self.full_dehydrate(bundle, for_list=True))
+
+        to_be_serialized[self._meta.collection_name] = bundles
+        to_be_serialized = self.alter_list_data_to_serialize(request, to_be_serialized)
+        return self.create_response(request, to_be_serialized)
+
+    def get_detail(self, request, **kwargs):
+        basic_bundle = self.build_bundle(request=request)
+        graphid = kwargs['pk']
+        date_type = request.GET.get('date_type', 0)
+        if date_type == 0:
+            timeLimit = 60
+            timeGap = 3600
+        elif date_type == 1:
+            timeLimit = 60
+            timeGap = 86400
+        elif date_type == 2:
+            timeLimit = 200
+            timeGap = 604800
+        elif date_type == 3:
+            timeLimit = 200
+            timeGap = 2592000
+        multipTime = timeGap / timeLimit
+        graphs_items = Graphs.graphs_objects.list_graphs_itemid(graphid)
+        for graphs_item in graphs_items:
+            itemid = graphs_item['itemid']
+            
+        try:
+            obj = self.cached_obj_get(bundle=basic_bundle, **self.remove_api_resource_names(kwargs))
+        except ObjectDoesNotExist:
+            return http.HttpNotFound()
+        except MultipleObjectsReturned:
+            return http.HttpMultipleChoices("More than one resource is found at this URI.")
+
+        bundle = self.build_bundle(obj=obj, request=request)
+        bundle = self.full_dehydrate(bundle)
+        bundle = self.alter_detail_data_to_serialize(request, bundle)
+        return self.create_response(request, bundle)
