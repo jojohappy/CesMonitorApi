@@ -205,6 +205,23 @@ class ItemHistorytManager(models.Manager):
         ItemHistory._meta.db_table = dbname
         queryset = ItemHistory.objects.filter(query_filter).order_by(sort)
         return queryset
+
+    def items_history4graphs(self, dbname, from_date, end_date, row_num, g_type, gap, itemid):
+        cursor = connection.cursor()
+        cursor.execute("""
+            select round(%s*(mod(h.clock + %s,%s))/%s,0) i, itemid, clock, avg(value) as value, min(value) as min, max(value) as max from history h where h.itemid = %s and h.clock >= %s and h.clock <= %s GROUP BY h.itemid,round(%s*(mod(h.clock + %s,%s))/%s,0) order by h.clock""", [int(row_num), int(g_type), int(gap),int(gap),int(itemid),int(from_date), int(end_date,int(row_num), int(g_type), int(gap), int(gap)])
+        items_history_list = []
+        
+        for row in cursor.fetchall():
+            items_history = {}
+            items_history['i'] = row[0]
+            items_history['itemid'] = row[1]
+            items_history['clock'] = row[2]
+            items_history['value'] = row[3]
+            items_history['min'] = row[4]
+            items_history['max'] = row[5]
+            items_history_list.append(items_history)
+        return items_history_list
         
 class ItemHistory(models.Model):
     itemid = models.BigIntegerField(primary_key = True)
@@ -347,7 +364,7 @@ class GraphsManager(models.Manager):
         queryset = Graphs.objects.filter(pk__in = row)
         return queryset
 
-    def list_graphs_itemid(self, graphid):
+    def list_graphs_items(self, graphid):
         cursor = connection.cursor()
         cursor.execute("""
             SELECT 

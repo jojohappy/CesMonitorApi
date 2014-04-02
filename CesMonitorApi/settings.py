@@ -70,9 +70,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
         'NAME': 'cnms',
-        'USER': 'cnms',
-        'PASSWORD': 'ces2005',
-        'HOST': '172.17.10.242',
+        'USER': 'root',
+        'PASSWORD': '111111',
+        'HOST': '172.16.0.2',
         'PORT': '3306',
     }
 }

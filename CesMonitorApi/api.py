@@ -760,8 +760,8 @@ class GraphsResource(ModelResource):
         return self.create_response(request, to_be_serialized)
 
     def get_detail(self, request, **kwargs):
-        basic_bundle = self.build_bundle(request=request)
         graphid = kwargs['pk']
+        graphs = Graphs.objects.get(graphid=graphid)
         date_type = request.GET.get('date_type', 0)
         if date_type == 0:
             timeLimit = 60
@@ -776,10 +776,183 @@ class GraphsResource(ModelResource):
             timeLimit = 200
             timeGap = 2592000
         multipTime = timeGap / timeLimit
-        graphs_items = Graphs.graphs_objects.list_graphs_itemid(graphid)
+        enddate_clock = int(time.time())
+        fromdate_clock = enddate_clock - timeGap
+        g_type = timeGap - (fromdate_clock % timeGap)
+        graphs_items = Graphs.graphs_objects.list_graphs_items(graphid)
+        drawType = []
+        itemsunits = []
+        itemsName = []
+        graphColor = []
+        count =  [[0 for col in range(int(timeLimit))] for row in range(len(graphs_items))]
+        historyValue =  [[0 for col in range(int(timeLimit))] for row in range(len(graphs_items))]
+        unitsValue =  [[0 for col in range(int(timeLimit))] for row in range(len(graphs_items))]
+        clockValue =  [[0 for col in range(int(timeLimit))] for row in range(len(graphs_items))]
+        graphs_item_index = 0
         for graphs_item in graphs_items:
             itemid = graphs_item['itemid']
-            
+            item = Item.objects.get(itemid=itemid)
+            graphColor.append(graphs_item['color'])
+            drawType.append(graphs_item['drawtype'])
+            itemsName.append(item.description)
+            itemsunits.append(item.units)
+            sort = '-clock'
+            value_type = item.value_type
+            if value_type == 0:
+                dbname = 'history'
+            elif value_type == 1:
+                dbname = 'history_str'
+            else:
+                dbname = 'history_uint'
+
+            lastclock_temp = int(item.lastclock)
+            if lastclock_temp < enddate_clock and lastclock_temp > fromdate_clock
+                if (lastclock_temp - fromdate_clock) < 3600:
+                    enddate_clock = fromdate_clock + 3600
+                else:
+                    enddate_clock = lastclock_temp
+
+            query_items_history = ItemHistory.item_history_objects.items_history4graphs(dbname, fromdate_clock, enddate_clock, timeLimit, g_type, timeGap, itemid)
+
+            history_index = 0
+            for items_history in query_items_history:
+                if history_index < timeLimit:
+                    break
+                index = items_history["i"]
+                if index >= timeLimit:
+                    index = timeLimit - 1
+                count[graphs_item_index][int(index)] = int(index)
+                clockValue[graphs_item_index][int(index)] = int(items_history["clock"])
+                calc_fnc = graphs_item['calc_fnc']
+                if calc_fnc == 7 or calc_fnc == 2:
+                    historyValue[graphs_item_index][int(index)] = items_history["min"]
+                elif calc_fnc == 4:
+                    historyValue[graphs_item_index][int(index)] = items_history["max"]
+                else:
+                    historyValue[graphs_item_index][int(index)] = items_history["value"]
+                history_index += 1
+
+            if len(query_items_history) == 0:
+                for j in xrange(timeLimit):
+                    historyValue[graphs_item_index][j] = "0"
+                    if item.lastvalue == None:
+                        count[graphs_item_index][j] = 0
+                    else:
+                        count[graphs_item_index][j] = j
+
+            #historyValue = full_historyData(historyValue, count, graphs_item_index, timeLimit, graphs, timeGap, clockValue)
+            draw = True
+            prevDraw = True
+            index1 = 0
+            for j in xrange(1, len(historyValue[graphs_item_index])):
+                diff = abs(clockValue[graphs_item_index][j] - clockValue[graphs_item_index][index1])
+                cell = timeGap / timeLimit
+                delay = max(item.delay, 3600)
+                if cell > delay:
+                    draw = diff < (16 * cell)
+                else:
+                    draw = diff < (4 * delay)
+
+                if !draw and graphs_item['calc_fnc'] == 1:
+                    draw = (index1 - j) < 5
+
+                if int(graphs_item['type']) == 2
+                    draw = True
+
+                if !draw and !prevDraw:
+                    draw = True
+                else:
+                    prevDraw = draw
+
+                if index1 == 0:
+                    if null == historyValue[graphs_item_index][index1] or "0" == historyValue[graphs_item_index][index1]:
+                        historyValue[graphs_item_index][index1] = "0"
+                if draw:
+                    if historyValue[graphs_item_index][j] == null or "0" == historyValue[graphs_item_index][j]:
+                        if timeLimit == 60 and (j + 1) == historyValue[graphs_item_index].length:
+                            historyValue[graphs_item_index][j] = historyValue[graphs_item_index][j - 1]
+                        else:
+                            historyValue[graphs_item_index][j] = "0"
+                else:
+                    if null == historyValue[graphs_item_index][j] or "0" == historyValue[graphs_item_index][j]:
+                        historyValue[graphs_item_index][j] = "0"
+                index1 = j
+            graphs_item_index += 1
+        # 补全数据 + 数据格式化
+        for i in xrange(0, len(historyValue)):
+            for j in xrange(0, len(historyValue[i])):
+                if None == historyValue[i][j] or "0" == historyValue[i][j]:
+                    if timeLimit == 60 and (j + 1) == len(historyValue[i]):
+                        historyValue[i][j] = historyValue[i][j - 1]
+                    else:
+                        historyValue[i][j] = "0"
+                unitsValue[i][j] = itemsunits[i]
+
+        if graphs.graphtype == 1:
+            for i in xrange(0, len(historyValue)):
+                for j in xrange(0, len(historyValue[i])):
+                    if None == historyValue[i][j]:
+                        if (j + 1) == len(historyValue[i]) or (j + 2) == len(historyValue[i]) or (j + 3) == len(historyValue[i]):
+                            historyValue[i][j] = historyValue[i][j - 1]
+                        else:
+                            historyValue[i][j] = "0"
+                        continue
+                    if "0" == historyValue[i][j]:
+                        if (j + 1) == len(historyValue[i]) or (j + 2) == len(historyValue[i]) or (j + 3) == len(historyValue[i]):
+                            historyValue[i][j] = historyValue[i][j - 1]
+                        else:
+                            historyValue[i][j] = "0"
+        # 计算y轴最小值
+        minResult = []
+        minResult = calculateMinY(graphs, historyValue, itemsunits)
+        minY = float(minResult[0])
+
+        # 计算y轴最大值
+        maxResult = []
+        maxResult = calculateMaxY(graphs, historyValue, itemsunits)
+        maxY = float(maxResult[0])
+        units = maxResult[1]
+
+        if minY >= maxY:
+            minY = 0
+
+        if maxY == 0 and minY == 0:
+            maxY = 1
+
+        for i in xrange(0, len(historyValue)):
+            for j in xrange(0, len(historyValue[i])):
+                unitsTmp = unitsValue[i][j]
+                valueTmp = convert_graphsValue(units, unitsTmp, historyValue[i][j])
+                historyValue[i][j] = valueTmp
+
+        for i in xrange(0, timeLimit):
+            #List<GraphValue> value = new ArrayList<GraphValue>();
+            #GraphsDataEntity graphsDataEntity = new GraphsDataEntity();
+            for j in xrange(0, len(graphs_items)):
+                GraphValue graphValue = new GraphValue();
+                if count[j][i] != 0 and None != historyValue[j][i]
+                    graphValue.setValue(historyValue[j][i])
+                else
+                    graphValue.setValue("")
+                value.add(graphValue)
+            """
+            graphsDataEntity.setUnits(units);
+            graphsDataEntity.setYaxismin(minY);
+            graphsDataEntity.setYaxismax(maxY);
+            graphsDataEntity.setName(graphs.getName());
+            graphsDataEntity.setColor(color);
+            graphsDataEntity.setDrawtype(drawType);
+            graphsDataEntity.setItemname(itemname);
+            graphsDataEntity.setValue(value);
+            graphsDataEntity.setGraphtype(graphs.getGraphtype());
+
+            int clock = fromTime + multipTime * i;
+            graphsDataEntity.setClock(String.valueOf(clock));
+            graphsDataEntity.setDelay(multipTime);
+            listGraphsDataEntity.add(graphsDataEntity);
+            """
+
+        basic_bundle = self.build_bundle(request=request)
         try:
             obj = self.cached_obj_get(bundle=basic_bundle, **self.remove_api_resource_names(kwargs))
         except ObjectDoesNotExist:
