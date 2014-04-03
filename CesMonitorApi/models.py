@@ -209,7 +209,7 @@ class ItemHistorytManager(models.Manager):
     def items_history4graphs(self, dbname, from_date, end_date, row_num, g_type, gap, itemid):
         cursor = connection.cursor()
         cursor.execute("""
-            select round(%s*(mod(h.clock + %s,%s))/%s,0) i, itemid, clock, avg(value) as value, min(value) as min, max(value) as max from history h where h.itemid = %s and h.clock >= %s and h.clock <= %s GROUP BY h.itemid,round(%s*(mod(h.clock + %s,%s))/%s,0) order by h.clock""", [int(row_num), int(g_type), int(gap),int(gap),int(itemid),int(from_date), int(end_date,int(row_num), int(g_type), int(gap), int(gap)])
+            select round(%s*(mod(h.clock + %s,%s))/%s,0) i, itemid, clock, avg(value) as value, min(value) as min, max(value) as max from history h where h.itemid = %s and h.clock >= %s and h.clock <= %s GROUP BY h.itemid,round(%s*(mod(h.clock + %s,%s))/%s,0) order by h.clock""", [int(row_num), int(g_type), int(gap),int(gap),int(itemid),int(from_date), int(end_date),int(row_num), int(g_type), int(gap), int(gap)])
         items_history_list = []
         
         for row in cursor.fetchall():
@@ -273,7 +273,40 @@ class EventManager(models.Manager):
             events_statistic['count'] = row[1]
             events_statistics.append(events_statistic)
         return events_statistics
-        
+
+    def events_statistics_priority_week(self, from_date, end_date, hostid):
+        cursor = connection.cursor()
+        cursor.execute("""
+            SELECT priority,CONCAT(YEAR(FROM_UNIXTIME(clock)), '-', MONTH(FROM_UNIXTIME(clock)), '-', DAY(FROM_UNIXTIME(clock))) as date_time, COUNT(*) AS COUNT, YEAR(FROM_UNIXTIME(clock)) as y, MONTH(FROM_UNIXTIME(clock)) as m, DAY(FROM_UNIXTIME(clock)) as d FROM events_view WHERE clock>%s AND clock<%s and hostid=%s GROUP BY y, m, d, priority;""", [from_date, end_date, hostid])
+        events_statistics = []
+        old_date_time = ""
+        index = 0
+        events_statistic = {}
+        for row in cursor.fetchall():
+            date_time = row[1]
+            if index == 0:
+                events_statistic['date_time'] = row[1]
+                events_statistic['data'] = []
+                events_statistic['data'].append({'priority':1, 'count': 0})
+                events_statistic['data'].append({'priority':2, 'count': 0})
+                events_statistic['data'].append({'priority':3, 'count': 0})
+                events_statistic['data'].append({'priority':4, 'count': 0})
+                old_date_time = date_time
+            if old_date_time != date_time and index != 0:
+                events_statistics.append(events_statistic)
+                events_statistic = {}
+                events_statistic['date_time'] = row[1]
+                events_statistic['data'] = []
+                events_statistic['data'].append({'priority':1, 'count': 0})
+                events_statistic['data'].append({'priority':2, 'count': 0})
+                events_statistic['data'].append({'priority':3, 'count': 0})
+                events_statistic['data'].append({'priority':4, 'count': 0})
+                old_date_time = date_time
+            events_statistic['data'][row[0] - 1]['count'] = row[2]
+            index += 1
+        events_statistics.append(events_statistic)
+        return events_statistics
+
 class Event(models.Model):
     eventid = models.BigIntegerField(primary_key = True)
     clock = models.CharField(max_length = 16)

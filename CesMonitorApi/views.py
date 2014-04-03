@@ -129,3 +129,12 @@ def get_events_statistics(statistics_type):
     else:
         events_statistics = Event.event_objects.events_statistics_priority(int(fromdate_clock), int(enddate_clock))
     return events_statistics
+
+def events_statistics_week(request):
+    hostid = int(request.GET.get('hostid', 0))
+    response_data = {}
+    enddate_clock = int(time.time())
+    fromdate_clock = enddate_clock - 604800
+    events_statistics = Event.event_objects.events_statistics_priority_week(int(fromdate_clock), int(enddate_clock), hostid)
+    response_data['events_statistics_week'] = events_statistics
+    return HttpResponse(json.dumps(response_data), content_type="application/json")

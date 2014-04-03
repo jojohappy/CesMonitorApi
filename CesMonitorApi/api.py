@@ -15,207 +15,7 @@ from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
 from django.db.models import Q
 from CesMonitorApi.models import *
-
-pow_unit = (-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8)
-units = ('', 'n', 'l', 'm', '', 'K', 'M', 'G', 'T', 'P','E', 'Z', 'Y')
-map = {'B': 0,'KB': 1,'MB': 2,'GB': 3,'TB': 4,'PB': 5,'EB': 6,'ZB': 7,'YB': 8,'Bps': 0,'KBps': 1,'MBps': 2,'GBps': 3,'TBps': 4,'PBps': 5,'EBps': 6,'ZBps': 7,'YBps': 8,'qps': 0,'Kqps': 1,'Mqps': 2,'Gqps': 3,'Tqps': 4,'Pqps': 5,'Eqps': 6,'Zqps': 7,'Yqps': 8}
-mapUnit = {'': 0,'K': 1,'M': 2,'G': 3,'T': 4,'P': 5,'E': 6,'Z': 7,'Y': 8}
-
-# 时间转换 从秒转为YYYY-MM-DD HH:mm:SS
-def convert_int_to_datetime(origin_datetime):
-    return datetime.datetime.fromtimestamp(origin_datetime).strftime('%Y-%m-%d %H:%M:%S')
-
-# 监控数据格式转换
-def convert_units(value, itemunits):
-    convert = 0
-    if itemunits == "unixtime":
-        try:
-            convert_int_to_datetime(origin_datetime=long(value))
-        except:
-            return ""
-    if itemunits == "uptime":
-        return convertUnitsUptime(value=value)
-        
-
-    if itemunits == "s":
-        return convertUnitsS(value=value)
-    blackList = []
-    blackList.append("%")
-    blackList.append("ms")
-    blackList.append("rpm")
-    blackList.append("RPM")
-    if itemunits in blackList or len(itemunits) == 0:
-        if abs(float(value)) >= 0.01:
-            value = "%.2f" % (round(float(value) * 100) / 100.00)
-        else:
-            value = "%.6f" % float(value)
-
-        if float(value) == 0:
-            value = "0"
-        if value.endswith(".00"):
-            value = value[0 : len(value) - 3]
-        
-        if len(itemunits) == 0:
-            return value
-        else:
-            return value + itemunits
-
-    step = 0
-    if itemunits == "Bps" or itemunits == "B" or itemunits == "qps" or itemunits == "ips" or itemunits == "sps":
-        step = 1024
-        convert = 1
-    else:
-        convert = 1
-        step = 1000
-        
-    valueTmp = []
-    for p in pow_unit:
-        valueTmp.append(step ** p)
-
-    abs_v = 0;
-    if float(value) < 0:
-        abs_v = float(value) * -1
-    else:
-        abs_v = float(value)
-
-    valUnit = float(value)
-    index = 0
-    index_v = 0
-    if abs_v > 999 or abs_v < 0.001 :
-        for v in valueTmp:
-            if abs_v >= v :
-                index = index_v + 1
-                valUnit = v
-            else:
-                break
-            index_v += 1
-
-    if round(valUnit * 1000000) / 1000000.00000000 > 0 :
-        valUnit = float("%.6f" % (float(value) / valUnit))
-    else:
-        valUnit = 0
-
-    desc = ""
-    if convert == 0:
-        itemunits = itemunits.strip()
-    if convert == 1:
-        desc = units[index]
-
-    valUnit = round(valUnit * 100) / 100.00
-    return "%.2f%s%s" % (valUnit, desc, itemunits)
-
-def convertUnitsUptime(value):
-    secs = round(float(value))
-    if secs < 0:
-        value = "-"
-        secs = secs * -1
-    else:
-        value = ""
-    days = math.floor(secs / 86400.0)
-    print days
-    secs -= days * 86400.0
-
-    hours = math.floor(secs / 3600.0)
-    secs -= hours * 3600.0
-
-    mins = math.floor(secs / 60.0)
-    secs -= mins * 60.0
-
-    finalValue = ""
-    if int(days) != 0:
-        finalValue = "%d%s" % (int(days), "天,")
-    finalValue = "%s%02d:%02d:%02d" % (finalValue,int(hours), int(mins), secs)
-    return finalValue
-
-def convertUnitsS(value):
-    finalValue = ""
-    if math.floor(abs(float(value)) * 1000) == 0:
-        finalValue = "0秒" if float(value) == 0 else "< 1毫秒"
-        return finalValue;
-
-    secs = round(float(value) * 1000) / 1000
-    if secs < 0:
-        value = "-"
-        secs = secs * -1
-    else:
-        value = ""
-
-    n_unit = 0
-    n = math.floor(secs / 31536000.0)
-    if n != 0:
-        value += int(n) + "年 "
-        secs -= int(n) * 31536000
-        if 0 == n_unit:
-            n_unit = 4
-
-    n = math.floor(secs / 2592000.0)
-    if n != 0:
-        value += int(n) + "月 "
-        secs -= int(n) * 2592000
-        if 0 == n_unit:
-            n_unit = 3
-
-    n = math.floor(secs / 86400.0)
-    if n != 0:
-        value += int(n) + "天 "
-        secs -= int(n) * 86400
-        if 0 == n_unit:
-            n_unit = 2
-
-    n = math.floor(secs / 3600.0)
-    if n_unit < 4 and n != 0:
-        value += int(n) + "小时 "
-        secs -= int(n) * 3600
-        if 0 == n_unit:
-            n_unit = 1
-
-    n = math.floor(secs / 60.0)
-    if n_unit < 3 and n != 0:
-        value += int(n) + "分 "
-        secs -= int(n) * 60
-
-    n = math.floor(secs / 1.0)
-    if n_unit < 2 and n != 0:
-        value += int(n) + "秒 "
-        secs -= int(n)
-    
-    n = math.floor(secs * 1000.0)
-    if n_unit < 1 and n != 0:
-        value += int(n) + "毫秒"
-
-    finalValue = value
-    return finalValue
-
-def format_lastvalue(lastvalue, itemunits,value_type, valuemapid):
-    finalValue = ""
-    if lastvalue != "" and lastvalue != None:
-        if int(valuemapid) > 0:
-            finalValue = replace_value_by_map(value=lastvalue, valuemapid=valuemapid)
-        elif value_type == 0 :
-            finalValue = convert_units(value=lastvalue, itemunits=itemunits)
-        elif value_type == 3:
-            finalValue = convert_units(value=lastvalue, itemunits=itemunits)
-        elif value_type == 1 or value_type == 4 or value_type == 2:
-            finalValue = lastvalue
-        else:
-            finalValue = lastvalue
-        
-    else:
-        finalValue = "-"
-    
-    return finalValue
-
-def replace_value_by_map(value, valuemapid):
-    if int(valuemapid) < 1:
-        return value
-    try:
-        mappings = Mappings.objects.get(valuemapid=int(valuemapid),value=value)
-        return mappings.newvalue + "(" + value + ")"
-    except:
-        pass
-
-    return value
-
+from CesMonitorApi.utils import *
 
 class GroupsResource(ModelResource):
     hosts = fields.OneToManyField('CesMonitorApi.api.HostsResource', 'hosts', full = True, null = True)
@@ -309,7 +109,7 @@ class HostsProfilesExtResource(ModelResource):
         return "application/json"
 
 class ItemsResource(ModelResource):
-    host = fields.OneToOneField('CesMonitorApi.api.HostsResource', 'host', full = True, null = True)
+    # host = fields.OneToOneField('CesMonitorApi.api.HostsResource', 'host', full = True, null = True)
     class Meta:
         queryset = Item.objects.all()
         resource_name = 'items'
@@ -433,7 +233,6 @@ class ItemsResource(ModelResource):
             'event': event_bundle
         }
         itemid = event_bundle.data['itemid']
-        print itemid
         item_obj = Item.objects.get(itemid=itemid)
         item_resource = ItemsResource()
         item_bundle = item_resource.build_bundle(obj=item_obj, request=request)
@@ -449,12 +248,26 @@ class ItemsResource(ModelResource):
             lastvalue = bundle.data['lastvalue']
             prevvalue = bundle.data['prevvalue']
             if (int(bundle.data['value_type']) == 0 or int(bundle.data['value_type']) == 3) and lastvalue != "" and prevvalue != "" and lastvalue != None and prevvalue != None:
-                bundle.data['change_value'] = format_lastvalue(lastvalue=(float(lastvalue)-float(prevvalue)), itemunits=bundle.data['units'],value_type=bundle.data['value_type'], valuemapid=bundle.data['valuemapid'])
+                change_value = float(lastvalue)-float(prevvalue)
+                if change_value >= 0:
+                    change_value_str = '▲'
+                else:
+                    change_value_str = '▼'
+                bundle.data['change_value'] = "%s%s" % (change_value_str, format_lastvalue(lastvalue=abs(change_value), itemunits=bundle.data['units'],value_type=bundle.data['value_type'], valuemapid=bundle.data['valuemapid']))
             else:
                 bundle.data['change_value'] = '-'
             bundle.data['lastclock'] = convert_int_to_datetime(origin_datetime=int(bundle.data['lastclock']))
             bundle.data['lastvalue'] = format_lastvalue(lastvalue=bundle.data['lastvalue'], itemunits=bundle.data['units'],value_type=bundle.data['value_type'], valuemapid=bundle.data['valuemapid'])
+            if bundle.data['lastvalue'] == None:
+                bundle.data['lastvalue'] = '-'
+            if bundle.data['lastclock'] == None:
+                bundle.data['lastclock'] = '-'
         except:
+            bundle.data['lastvalue'] = '-'
+            if bundle.data['lastclock'] == None:
+                bundle.data['lastclock'] = '-'
+            else:
+                bundle.data['lastclock'] = convert_int_to_datetime(origin_datetime=int(bundle.data['lastclock']))
             pass
         return bundle
         
@@ -735,6 +548,7 @@ class GraphsResource(ModelResource):
     def prepend_urls(self):
         return [
             url(r"^(?P<resource_name>%s)/host/(?P<%s>.*?)%s$" % (self._meta.resource_name, self._meta.detail_uri_name, trailing_slash()), self.wrap_view('get_host_graphs'), name="api_dispatch_detail_graphs_host"),
+            url(r"^(?P<resource_name>%s)/item/(?P<%s>.*?)%s$" % (self._meta.resource_name, self._meta.detail_uri_name, trailing_slash()), self.wrap_view('get_item_graphs'), name="api_dispatch_detail_graphs_item"),
         ]
 
     def get_host_graphs(self, request, **kwargs):
@@ -760,6 +574,8 @@ class GraphsResource(ModelResource):
         return self.create_response(request, to_be_serialized)
 
     def get_detail(self, request, **kwargs):
+        list_graphs_data = []
+        list_graphs_value = []
         graphid = kwargs['pk']
         graphs = Graphs.objects.get(graphid=graphid)
         date_type = request.GET.get('date_type', 0)
@@ -804,19 +620,21 @@ class GraphsResource(ModelResource):
                 dbname = 'history_str'
             else:
                 dbname = 'history_uint'
-
-            lastclock_temp = int(item.lastclock)
-            if lastclock_temp < enddate_clock and lastclock_temp > fromdate_clock
-                if (lastclock_temp - fromdate_clock) < 3600:
-                    enddate_clock = fromdate_clock + 3600
-                else:
-                    enddate_clock = lastclock_temp
+            try:
+                lastclock_temp = int(item.lastclock)
+                if lastclock_temp < enddate_clock and lastclock_temp > fromdate_clock:
+                    if (lastclock_temp - fromdate_clock) < 3600:
+                        enddate_clock = fromdate_clock + 3600
+                    else:
+                        enddate_clock = lastclock_temp
+            except:
+                pass
 
             query_items_history = ItemHistory.item_history_objects.items_history4graphs(dbname, fromdate_clock, enddate_clock, timeLimit, g_type, timeGap, itemid)
 
             history_index = 0
             for items_history in query_items_history:
-                if history_index < timeLimit:
+                if history_index >= timeLimit:
                     break
                 index = items_history["i"]
                 if index >= timeLimit:
@@ -840,7 +658,7 @@ class GraphsResource(ModelResource):
                     else:
                         count[graphs_item_index][j] = j
 
-            #historyValue = full_historyData(historyValue, count, graphs_item_index, timeLimit, graphs, timeGap, clockValue)
+            historyValue = full_historyData(historyValue, count, graphs_item_index, timeLimit, timeGap, clockValue)
             draw = True
             prevDraw = True
             index1 = 0
@@ -853,28 +671,28 @@ class GraphsResource(ModelResource):
                 else:
                     draw = diff < (4 * delay)
 
-                if !draw and graphs_item['calc_fnc'] == 1:
+                if draw == False and graphs_item['calc_fnc'] == 1:
                     draw = (index1 - j) < 5
 
-                if int(graphs_item['type']) == 2
+                if int(graphs_item['type']) == 2:
                     draw = True
 
-                if !draw and !prevDraw:
+                if draw == False and prevDraw == False:
                     draw = True
                 else:
                     prevDraw = draw
 
                 if index1 == 0:
-                    if null == historyValue[graphs_item_index][index1] or "0" == historyValue[graphs_item_index][index1]:
+                    if None == historyValue[graphs_item_index][index1] or "0" == historyValue[graphs_item_index][index1]:
                         historyValue[graphs_item_index][index1] = "0"
                 if draw:
-                    if historyValue[graphs_item_index][j] == null or "0" == historyValue[graphs_item_index][j]:
-                        if timeLimit == 60 and (j + 1) == historyValue[graphs_item_index].length:
+                    if historyValue[graphs_item_index][j] == None or "0" == historyValue[graphs_item_index][j]:
+                        if timeLimit == 60 and (j + 1) == len(historyValue[graphs_item_index]):
                             historyValue[graphs_item_index][j] = historyValue[graphs_item_index][j - 1]
                         else:
                             historyValue[graphs_item_index][j] = "0"
                 else:
-                    if null == historyValue[graphs_item_index][j] or "0" == historyValue[graphs_item_index][j]:
+                    if None == historyValue[graphs_item_index][j] or "0" == historyValue[graphs_item_index][j]:
                         historyValue[graphs_item_index][j] = "0"
                 index1 = j
             graphs_item_index += 1
@@ -924,43 +742,221 @@ class GraphsResource(ModelResource):
                 unitsTmp = unitsValue[i][j]
                 valueTmp = convert_graphsValue(units, unitsTmp, historyValue[i][j])
                 historyValue[i][j] = valueTmp
-
+        
         for i in xrange(0, timeLimit):
-            #List<GraphValue> value = new ArrayList<GraphValue>();
-            #GraphsDataEntity graphsDataEntity = new GraphsDataEntity();
+            graphs_data = {}
+            value = []
             for j in xrange(0, len(graphs_items)):
-                GraphValue graphValue = new GraphValue();
-                if count[j][i] != 0 and None != historyValue[j][i]
-                    graphValue.setValue(historyValue[j][i])
-                else
-                    graphValue.setValue("")
-                value.add(graphValue)
-            """
-            graphsDataEntity.setUnits(units);
-            graphsDataEntity.setYaxismin(minY);
-            graphsDataEntity.setYaxismax(maxY);
-            graphsDataEntity.setName(graphs.getName());
-            graphsDataEntity.setColor(color);
-            graphsDataEntity.setDrawtype(drawType);
-            graphsDataEntity.setItemname(itemname);
-            graphsDataEntity.setValue(value);
-            graphsDataEntity.setGraphtype(graphs.getGraphtype());
+                graph_value = ""
+                if count[j][i] != 0 and None != historyValue[j][i]:
+                    graphValue = historyValue[j][i]
+                else:
+                    graphValue = ""
+                try:
+                    value.append(float(graphValue))
+                except:
+                    value.append(None)
+            clock_temp = int(fromdate_clock) + int(multipTime) * i
+            #graphs_data['units'] = units
+            #graphs_data['yaxismin'] = minY
+            #graphs_data['yaxismax'] = maxY
+            #graphs_data['name'] = graphs.name
+            #graphs_data['color'] = graphColor
+            #graphs_data['drawtype'] = drawType
+            #graphs_data['itemname'] = itemsName
+            graphs_data['value'] = value
+            #graphs_data['graphtype'] = graphs.graphtype
+            graphs_data['clock'] = clock_temp
+            #graphs_data['delay'] = multipTime
+            list_graphs_data.append(graphs_data)
+            list_graphs_value.append(value)
 
-            int clock = fromTime + multipTime * i;
-            graphsDataEntity.setClock(String.valueOf(clock));
-            graphsDataEntity.setDelay(multipTime);
-            listGraphsDataEntity.add(graphsDataEntity);
-            """
+        bundle = {
+            'data': list_graphs_data,
+            'length': len(list_graphs_data),
+            'value': list_graphs_value,
+            'color':graphColor,
+            'delay': multipTime,
+            'drawtype': drawType,
+            'graphtype': graphs.graphtype,
+            'itemname': itemsName,
+            'name': graphs.name,
+            'units': units,
+            'yaxismax': maxY,
+            'yaxismin': minY,
+        }
+        return self.create_response(request, bundle)
 
-        basic_bundle = self.build_bundle(request=request)
-        try:
-            obj = self.cached_obj_get(bundle=basic_bundle, **self.remove_api_resource_names(kwargs))
-        except ObjectDoesNotExist:
-            return http.HttpNotFound()
-        except MultipleObjectsReturned:
-            return http.HttpMultipleChoices("More than one resource is found at this URI.")
+    def get_item_graphs(self, request, **kwargs):
+        list_graphs_data = []
+        list_graphs_value = []
+        itemid = kwargs['pk']
 
-        bundle = self.build_bundle(obj=obj, request=request)
-        bundle = self.full_dehydrate(bundle)
-        bundle = self.alter_detail_data_to_serialize(request, bundle)
+        date_type = request.GET.get('date_type', 0)
+        if date_type == 0:
+            timeLimit = 60
+            timeGap = 3600
+        elif date_type == 1:
+            timeLimit = 60
+            timeGap = 86400
+        elif date_type == 2:
+            timeLimit = 200
+            timeGap = 604800
+        elif date_type == 3:
+            timeLimit = 200
+            timeGap = 2592000
+        multipTime = timeGap / timeLimit
+        enddate_clock = int(time.time())
+        fromdate_clock = enddate_clock - timeGap
+        g_type = timeGap - (fromdate_clock % timeGap)
+
+        itemsunits = []
+
+        count =  [[0 for col in range(int(timeLimit))] for row in range(1)]
+        historyValue =  [[0 for col in range(int(timeLimit))] for row in range(1)]
+        unitsValue =  [[0 for col in range(int(timeLimit))] for row in range(1)]
+        clockValue =  [[0 for col in range(int(timeLimit))] for row in range(1)]
+
+        item = Item.objects.get(itemid=itemid)
+        itemsName = item.description
+        itemsunits.append(item.units)
+        sort = '-clock'
+        value_type = item.value_type
+        if value_type == 0:
+            dbname = 'history'
+        elif value_type == 1:
+            dbname = 'history_str'
+        else:
+            dbname = 'history_uint'
+
+        lastclock_temp = int(item.lastclock)
+        if lastclock_temp < enddate_clock and lastclock_temp > fromdate_clock:
+            if (lastclock_temp - fromdate_clock) < 3600:
+                enddate_clock = fromdate_clock + 3600
+            else:
+                enddate_clock = lastclock_temp
+
+        query_items_history = ItemHistory.item_history_objects.items_history4graphs(dbname, fromdate_clock, enddate_clock, timeLimit, g_type, timeGap, itemid)
+
+        history_index = 0
+        graphs_item_index = 0
+        for items_history in query_items_history:
+            if history_index >= timeLimit:
+                break
+            index = items_history["i"]
+            if index >= timeLimit:
+                index = timeLimit - 1
+            count[graphs_item_index][int(index)] = int(index)
+            clockValue[graphs_item_index][int(index)] = int(items_history["clock"])
+            historyValue[graphs_item_index][int(index)] = items_history["value"]
+            history_index += 1
+
+        if len(query_items_history) == 0:
+            for j in xrange(timeLimit):
+                historyValue[graphs_item_index][j] = "0"
+                if item.lastvalue == None:
+                    count[graphs_item_index][j] = 0
+                else:
+                    count[graphs_item_index][j] = j
+
+        historyValue = full_historyData(historyValue, count, graphs_item_index, timeLimit, timeGap, clockValue)
+        draw = True
+        prevDraw = True
+        index1 = 0
+        for j in xrange(1, len(historyValue[graphs_item_index])):
+            diff = abs(clockValue[graphs_item_index][j] - clockValue[graphs_item_index][index1])
+            cell = timeGap / timeLimit
+            delay = max(item.delay, 3600)
+            if cell > delay:
+                draw = diff < (16 * cell)
+            else:
+                draw = diff < (4 * delay)
+
+            if draw == False and prevDraw == False:
+                    draw = True
+            else:
+                prevDraw = draw
+
+            if index1 == 0:
+                if None == historyValue[graphs_item_index][index1] or "0" == historyValue[graphs_item_index][index1]:
+                        historyValue[graphs_item_index][index1] = "0"
+            if draw:
+                if historyValue[graphs_item_index][j] == None or "0" == historyValue[graphs_item_index][j]:
+                    if timeLimit == 60 and (j + 1) == len(historyValue[graphs_item_index]):
+                        historyValue[graphs_item_index][j] = historyValue[graphs_item_index][j - 1]
+                    else:
+                        historyValue[graphs_item_index][j] = "0"
+            else:
+                if None == historyValue[graphs_item_index][j] or "0" == historyValue[graphs_item_index][j]:
+                    historyValue[graphs_item_index][j] = "0"
+            index1 = j
+
+        # 补全数据 + 数据格式化
+        for i in xrange(0, len(historyValue)):
+            for j in xrange(0, len(historyValue[i])):
+                if None == historyValue[i][j] or "0" == historyValue[i][j]:
+                    if timeLimit == 60 and (j + 1) == len(historyValue[i]):
+                        historyValue[i][j] = historyValue[i][j - 1]
+                    else:
+                        historyValue[i][j] = "0"
+                unitsValue[i][j] = itemsunits[i]
+
+
+        #补全数据 +计算最大值
+        maxYMiddle = -1
+        if None != historyValue[0][0]:
+            if item.value_type == 0 or item.value_type == 3:
+                maxYMiddle = float(historyValue[0][0])
+
+        for i in xrange(0, len(historyValue)):
+            for j in xrange(0, len(historyValue[i])):
+                if None == historyValue[i][j]:
+                    if timeLimit == 60 and (j + 1) == len(historyValue[i]):
+                        historyValue[i][j] = historyValue[i][j - 1]
+                    else:
+                        historyValue[i][j] = "0"
+                if item.value_type == 0 or item.value_type == 3:
+                    if maxYMiddle < float(historyValue[i][j]):
+                        maxYMiddle = float(historyValue[i][j])
+
+        #数据格式化
+        result = convert_units4Graphs(str(maxYMiddle), item.units)
+        maxYMiddle = float(result[0])
+        unitsMax = result[1]
+        for i in xrange(0, len(historyValue)):
+            for j in xrange(0, len(historyValue[i])):
+                valueTmp = convert_graphsValue(unitsMax,item.units, historyValue[i][j])
+                historyValue[i][j] = valueTmp
+        
+        for i in xrange(0, timeLimit):
+            graphs_data = {}
+            value = []
+            for j in xrange(0, 1):
+                graph_value = ""
+                if count[j][i] != 0 and None != historyValue[j][i]:
+                    graphValue = historyValue[j][i]
+                else:
+                    graphValue = ""
+                value.append(graphValue)
+            clock_temp = int(fromdate_clock) + int(multipTime) * i
+            #graphs_data['units'] = unitsMax
+            #graphs_data['yaxismin'] = 0
+            #graphs_data['yaxismax'] = maxYMiddle
+            #graphs_data['itemname'] = itemsName
+            graphs_data['value'] = float(graphValue)
+            graphs_data['clock'] = clock_temp
+            #graphs_data['delay'] = multipTime
+            list_graphs_data.append(graphs_data)
+            list_graphs_value.append(float(graphValue))
+
+        bundle = {
+            'data': list_graphs_data,
+            'length': len(list_graphs_data),
+            'value': list_graphs_value,
+            'units': unitsMax,
+            'delay': multipTime,
+            'itemname': itemsName,
+            'yaxismax': maxYMiddle,
+            'yaxismin': 0,
+        }
         return self.create_response(request, bundle)
