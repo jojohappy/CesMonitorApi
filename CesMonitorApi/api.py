@@ -35,8 +35,10 @@ class GroupsResource(ModelResource):
             hosts = bundle.data['hosts']
             e_num = 0
             for host in hosts:
-                if len(host.data['events']) > 0:
-                    e_num += 1
+                #if len(host.data['events']) > 0:
+                events = host.data['events']
+                for event in events:
+                    e_num += event['count']
             bundle.data['e_num'] = e_num
         except :
             traceback.print_exc()
@@ -59,14 +61,15 @@ class HostsResource(ModelResource):
         
     def dehydrate(self, bundle):
         hostid_f = int(bundle.data['hostid'])
-        query_filter = Q(hostid=hostid_f)
-        query_set = Event.event_objects.current_events().filter(query_filter)
+        #query_filter = Q(hostid=hostid_f)
+        #query_set = Event.event_objects.current_events().filter(query_filter)
         events = []
-        event_resource = EventsResource()
-        for event in query_set:
-            event.item = None
-            event_bundle = event_resource.build_bundle(obj=event, request=bundle.request)
-            events.append(event_resource.full_dehydrate(event_bundle, for_list=False))
+        #event_resource = EventsResource()
+        #for event in query_set:
+            #event.item = None
+            #event_bundle = event_resource.build_bundle(obj=event, request=bundle.request)
+            #events.append(event_resource.full_dehydrate(event_bundle, for_list=False))
+        events = Event.event_objects.events_statistics_priority_host(hostid_f)
         bundle.data['events'] = events
         #request.session['userid']
         userid = 1
@@ -262,6 +265,12 @@ class ItemsResource(ModelResource):
                 bundle.data['lastvalue'] = '-'
             if bundle.data['lastclock'] == None:
                 bundle.data['lastclock'] = '-'
+            itemid = bundle.data['itemid']
+            result = Event.event_objects.current_events_by_itemid(itemid)
+            if len(result) == 0:
+                bundle.data['events_count'] = 0
+            else:
+                bundle.data['events_count'] = result[0]
         except:
             bundle.data['lastvalue'] = '-'
             if bundle.data['lastclock'] == None:
@@ -459,6 +468,12 @@ class ApplicationsResource(ModelResource):
         
 class ClassificationsResource(ModelResource):
     groups = fields.OneToManyField('CesMonitorApi.api.GroupsResource', 'groups', full = True, null = True)
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/services%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('dispatch_list'), name="api_dispatch_list_services"),
+        ]
+
     class Meta:
         queryset = Classification.objects.all()
         resource_name = 'classifications'
@@ -480,6 +495,12 @@ class ClassificationsResource(ModelResource):
         except :
             pass
         return bundle
+
+    def get_object_list(self, request):
+        full_path = request.get_full_path()
+        if 0 < full_path.find('services'):
+            return self._meta.queryset._clone().filter(classificationid=7)
+        return self._meta.queryset._clone()
 
 class FavouritesResource(ModelResource):
     # host = fields.OneToOneField('CesMonitorApi.api.HostsResource', 'hosts', full = True, null = True)
@@ -519,8 +540,10 @@ class FavouritesResource(ModelResource):
     
     def obj_delete_list(self, bundle, **kwargs):
         # userid = request.session['userid'];
+        hostid = int(bundle.request.GET.get('hostid', 0))
+        print bundle.request
         userid = 1
-        objects_to_delete = self.obj_get_list(bundle=bundle, **kwargs).filter(userid=userid)
+        objects_to_delete = self.obj_get_list(bundle=bundle, **kwargs).filter(userid=userid,hostid=hostid)
         deletable_objects = self.authorized_delete_list(objects_to_delete, bundle)
 
         if hasattr(deletable_objects, 'delete'):
@@ -578,7 +601,9 @@ class GraphsResource(ModelResource):
         list_graphs_value = []
         graphid = kwargs['pk']
         graphs = Graphs.objects.get(graphid=graphid)
-        date_type = request.GET.get('date_type', 0)
+        date_type = int(request.GET.get('date_type', 0))
+        timeLimit = 60
+        timeGap = 3600
         if date_type == 0:
             timeLimit = 60
             timeGap = 3600
@@ -792,7 +817,9 @@ class GraphsResource(ModelResource):
         list_graphs_value = []
         itemid = kwargs['pk']
 
-        date_type = request.GET.get('date_type', 0)
+        date_type = int(request.GET.get('date_type', 0))
+        timeGap = 3600
+        timeLimit = 60
         if date_type == 0:
             timeLimit = 60
             timeGap = 3600
@@ -943,12 +970,18 @@ class GraphsResource(ModelResource):
             #graphs_data['yaxismin'] = 0
             #graphs_data['yaxismax'] = maxYMiddle
             #graphs_data['itemname'] = itemsName
-            graphs_data['value'] = float(graphValue)
+            try:
+                graphs_data['value'] = float(graphValue)
+            except:
+                graphs_data['value'] = None
             graphs_data['clock'] = clock_temp
             #graphs_data['delay'] = multipTime
             list_graphs_data.append(graphs_data)
-            list_graphs_value.append(float(graphValue))
-
+            try:
+                list_graphs_value.append(float(graphValue))
+            except:
+                list_graphs_value.append(None)
+            
         bundle = {
             'data': list_graphs_data,
             'length': len(list_graphs_data),

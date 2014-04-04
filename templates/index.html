@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="{{static_root}}/css/index.css" />
 	<link rel="stylesheet" type="text/css" href="{{static_root}}/css/flat.css" />
 	<link rel="stylesheet" type="text/css" href="{{static_root}}/css/green.css" />
+
 	<title>
 		EVO-Monitor
 	</title>
@@ -36,7 +37,7 @@
 							</div>
 						</div>
 					</div>
-					<div id="divMIAStaticText" class="div-MIA-Static-Text">个设备正常运行</div>
+					<div id="divMIAStaticText" class="div-MIA-Static-Text">台设备正常运行</div>
 				</div>
 				<div id="divMIAChart" class="div-MIA-Chart"></div>
 				<div id="divMIAChartText" class="div-MIA-Chart-Text">
@@ -64,12 +65,14 @@
 				<img src="{{static_root}}/img/equipment.png" class="img-DT-Icon-bg">
 				<div id="" class="div-DT-Icon-label">设备详细</div>
 			</div>
+			<!--
 			<div id="divFavoritesIcon" class="div-DT-Icon">
-				<img src="{{static_root}}/img/favorites.png" class="img-DT-Icon-bg">
+				<img src="img/favorites.png" class="img-DT-Icon-bg">
 				<div id="" class="div-DT-Icon-label">收藏夹</div>
 				<div id="divFavoritesIconChart" class="div-DT-Icon-chart"></div>
 				<div id="divFavoritesIconChartInfo" class="div-DT-Icon-chart-Info">2%<br>异常</div>
 			</div>
+			-->
 			<div id="divSettingIcon" class="div-DT-Icon">
 				<img src="{{static_root}}/img/setting.png" class="img-DT-Icon-bg">
 				<div id="" class="div-DT-Icon-label">设置</div>
@@ -87,179 +90,7 @@
 			<div id="divDTAlertListAreaMainTitle" class="div-DT-Alert-List-Area-Main-Title">
 					当前告警列表
 			</div>
-			<div id="divDTAlertListAreaMain" class="div-DT-Alert-List-Area-Main">
-				
-				<div  class="div-DT-Alert-row">
-					<div id="" class="div-DT-Alert-cell">
-						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
-							严重
-						</div>
-						<div id="" class="div-DT-Alert-cell-Equipment">
-							小型机设备-2222222
-						</div>
-						<div id="" class="div-DT-Alert-cell-Time">
-							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
-							2013-2-27 17:32:21
-						</div>
-						<div  id="" class="div-DT-Alert-cell-Info">
-							TESTDB-IBMDEFAULTBP-缓冲池命中率(数据)小于95%
-						</div>
-					</div>
-					<div id="" class="div-DT-Alert-cell">
-						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
-							严重
-						</div>
-						<div id="" class="div-DT-Alert-cell-Equipment">
-							小型机设备-2222222
-						</div>
-						<div id="" class="div-DT-Alert-cell-Time">
-							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
-							2013-2-27 17:32:21
-						</div>
-						<div  id="" class="div-DT-Alert-cell-Info">
-							CPU利用率大于80%
-						</div>
-					</div>
-					<div id="" class="div-DT-Alert-cell">
-						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
-							严重
-						</div>
-						<div id="" class="div-DT-Alert-cell-Equipment">
-							小型机设备-2222222
-						</div>
-						<div id="" class="div-DT-Alert-cell-Time">
-							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
-							2013-2-27 17:32:21
-						</div>
-						<div  id="" class="div-DT-Alert-cell-Info">
-							CPU等待时间百分比大于60%
-						</div>
-					</div>
-					<div id="" class="div-DT-Alert-cell">
-						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
-							严重
-						</div>
-						<div id="" class="div-DT-Alert-cell-Equipment">
-							小型机设备-2222222
-						</div>
-						<div id="" class="div-DT-Alert-cell-Time">
-							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
-							2013-2-27 17:32:21
-						</div>
-						<div  id="" class="div-DT-Alert-cell-Info">
-							/usr/IBM/WebSphere文件系统利用率大于90%
-						</div>
-					</div>
-					<div id="" class="div-DT-Alert-cell">
-						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level3">
-							普通
-						</div>
-						<div id="" class="div-DT-Alert-cell-Equipment">
-							小型机设备-2222222
-						</div>
-						<div id="" class="div-DT-Alert-cell-Time">
-							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
-							2013-2-27 17:32:21
-						</div>
-						<div  id="" class="div-DT-Alert-cell-Info">
-							en0发送的失败的总包数大于90
-						</div>
-					</div>
-					<div id="" class="div-DT-Alert-cell">
-						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level3">
-							普通
-						</div>
-						<div id="" class="div-DT-Alert-cell-Equipment">
-							小型机设备-2222222
-						</div>
-						<div id="" class="div-DT-Alert-cell-Time">
-							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
-							2013-2-27 17:32:21
-						</div>
-						<div  id="" class="div-DT-Alert-cell-Info">
-							en0发送的失败的总包数大于90
-						</div>
-					</div>
-				</div>
-				<div  class="div-DT-Alert-row">
-					<div id="" class="div-DT-Alert-cell">
-						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
-							严重
-						</div>
-						<div id="" class="div-DT-Alert-cell-Equipment">
-							小型机设备-2222222
-						</div>
-						<div id="" class="div-DT-Alert-cell-Time">
-							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
-							2013-2-27 17:32:21
-						</div>
-						<div  id="" class="div-DT-Alert-cell-Info">
-							CPU等待时间百分比大于60%
-						</div>
-					</div>
-					<div id="" class="div-DT-Alert-cell">
-						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
-							严重
-						</div>
-						<div id="" class="div-DT-Alert-cell-Equipment">
-							小型机设备-2222222
-						</div>
-						<div id="" class="div-DT-Alert-cell-Time">
-							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
-							2013-2-27 17:32:21
-						</div>
-						<div  id="" class="div-DT-Alert-cell-Info">
-							TESTDB-IBMDEFAULTBP-缓冲池命中率(数据)小于95%
-						</div>
-					</div>
-					<div id="" class="div-DT-Alert-cell">
-						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level4">
-							严重
-						</div>
-						<div id="" class="div-DT-Alert-cell-Equipment">
-							小型机设备-2222222
-						</div>
-						<div id="" class="div-DT-Alert-cell-Time">
-							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
-							2013-2-27 17:32:21
-						</div>
-						<div  id="" class="div-DT-Alert-cell-Info">
-							en0发送的失败的总包数大于90
-						</div>
-					</div>
-					<div id="" class="div-DT-Alert-cell">
-						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level3">
-							普通
-						</div>
-						<div id="" class="div-DT-Alert-cell-Equipment">
-							小型机设备-2222222
-						</div>
-						<div id="" class="div-DT-Alert-cell-Time">
-							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
-							2013-2-27 17:32:21
-						</div>
-						<div  id="" class="div-DT-Alert-cell-Info">
-							/usr/IBM/WebSphere文件系统利用率大于90%
-						</div>
-					</div>
-					<div id="" class="div-DT-Alert-cell">
-						<div id="" class="div-DT-Alert-cell-level div-DT-Alert-cell-level3">
-							普通
-						</div>
-						<div id="" class="div-DT-Alert-cell-Equipment">
-							小型机设备-2222222
-						</div>
-						<div id="" class="div-DT-Alert-cell-Time">
-							<img src="{{static_root}}/img/time.png" class="img-DT-Alert-cell-Time-Icon">
-							2013-2-27 17:32:21
-						</div>
-						<div  id="" class="div-DT-Alert-cell-Info">
-							TESTDB-IBMSYSTEMBP4K-缓冲池命中率(索引)小于95%
-						</div>
-					</div>
-				</div>
-				
-			</div>
+			<div id="divDTAlertListAreaMain" class="div-DT-Alert-List-Area-Main"></div>
 			<div id="divDTAlertListAreaSub" class="div-DT-Alert-List-Area-Sub">
 			</div>
 		</div>
@@ -281,273 +112,31 @@
 		</div>
 		<div id="divWindowAlertListDetail" class="div-Window-Detail">
 			<div id="divWindowAlertToolbar" class="div-Window-Alert-Toolbar">
-				<div id="divWindowAlertToolbarSelect" class="div-Window-Alert-Toolbar-No">
-					序号
-				</div>
-				<div id="divWindowAlertToolbarLevel" class="div-Window-Alert-Toolbar-Level">
-					等级
-				</div>
-				<div id="divWindowAlertToolbarEquipment" class="div-Window-Alert-Toolbar-Equipment">
-					设备
-				</div>
-				<div id="divWindowAlertToolbarStartTime" class="div-Window-Alert-Toolbar-Start-Time">
-					发生时间
-				</div>
-				<div id="divWindowAlertToolbarDuration" class="div-Window-Alert-Toolbar-Duration">
-					持续时间
-				</div>
-				<div id="divWindowAlertToolbarInfo" class="div-Window-Alert-Toolbar-Info">
-					详细信息
-				</div>
-				<div id="divWindowAlertToolbarConfirm" class="div-Window-Alert-Toolbar-Confirm">
-					确认状态
-				</div>
+				<div id="divWindowAlertToolbarLevel" class="div-Window-Alert-Toolbar-Level">等级 ▼</div>
+				<div id="divWindowAlertToolbarEquipment" class="div-Window-Alert-Toolbar-Equipment">设备&nbsp;&nbsp;&nbsp;</div>
+				<div id="divWindowAlertToolbarStartTime" class="div-Window-Alert-Toolbar-Start-Time">发生时间&nbsp;&nbsp;&nbsp;</div>
+				<div id="divWindowAlertToolbarDuration" class="div-Window-Alert-Toolbar-Duration">持续时间&nbsp;&nbsp;&nbsp;</div>
+				<div id="divWindowAlertToolbarInfo" class="div-Window-Alert-Toolbar-Info">详细信息&nbsp;&nbsp;&nbsp;</div>
 			</div>
-			<div id="divWindowAlertMain" class="div-Window-Alert-Main">
-				<div class="div-Window-Alert-Cell">
-					<div id="" class="div-Window-Alert-Cell-No">
-						1
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Level div-Window-Alert-Cell-Level-4">
-						严重
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Equipment" title="网络设备22221122-2222323">
-						网络设备22221122-2222323
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Start-Time">
-						2014-02-11 17:34:21
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Duration">
-						13小时57分钟18秒
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Info" title="en0发送的失败的总包数大于90">
-						en0发送的失败的总包数大于90
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Confirm">
-						<input type="checkbox" class="input-Window-Alert-Cell-Confirm">
-					</div>
-				</div>
-				<div class="div-Window-Alert-Cell">
-					<div id="" class="div-Window-Alert-Cell-No">
-						2
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Level div-Window-Alert-Cell-Level-4">
-						严重
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Equipment" title="TESTDB-IBMSYSTEMBP4K-缓冲池命中率(索引)小于95%">
-						TESTDB-IBMSYSTEMBP4K-缓冲池命中率(索引)小于95%
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Start-Time">
-						2014-02-11 17:34:21
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Duration">
-						13小时57分钟18秒
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Info" title="/usr/IBM/WebSphere文件系统利用率大于90%">
-						/usr/IBM/WebSphere文件系统利用率大于90%
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Confirm">
-						<input type="checkbox" class="input-Window-Alert-Cell-Confirm">
-					</div>
-				</div>
-				<div class="div-Window-Alert-Cell">
-					<div id="" class="div-Window-Alert-Cell-No">
-						3
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Level div-Window-Alert-Cell-Level-4">
-						严重
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Equipment" title="网络设备22221122-2222323">
-						网络设备22221122-2222323
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Start-Time">
-						2014-02-11 17:34:21
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Duration">
-						13小时57分钟18秒
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Info" title="CPU等待时间百分比大于60%">
-						CPU等待时间百分比大于60%
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Confirm">
-						<input type="checkbox" class="input-Window-Alert-Cell-Confirm">
-					</div>
-				</div>
-				<div class="div-Window-Alert-Cell">
-					<div id="" class="div-Window-Alert-Cell-No">
-						4
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Level div-Window-Alert-Cell-Level-3">
-						普通
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Equipment" title="网络设备22221122-2222323">
-						网络设备22221122-2222323
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Start-Time">
-						2014-02-11 17:34:21
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Duration">
-						13小时57分钟18秒
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Info" title="TESTDB-IBMDEFAULTBP-缓冲池命中率(数据)小于95%">
-						TESTDB-IBMDEFAULTBP-缓冲池命中率(数据)小于95%
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Confirm">
-						<input type="checkbox" class="input-Window-Alert-Cell-Confirm">
-					</div>
-				</div>
-				<div class="div-Window-Alert-Cell">
-					<div id="" class="div-Window-Alert-Cell-No">
-						5
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Level div-Window-Alert-Cell-Level-3">
-						普通
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Equipment" title="网络设备22221122-2222323">
-						网络设备22221122-2222323
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Start-Time">
-						2014-02-11 17:34:21
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Duration">
-						13小时57分钟18秒
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Info" title="CPU等待时间百分比大于60%">
-						CPU等待时间百分比大于60%
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Confirm">
-						<input type="checkbox" class="input-Window-Alert-Cell-Confirm">
-					</div>
-				</div>
-				<div class="div-Window-Alert-Cell">
-					<div id="" class="div-Window-Alert-Cell-No">
-						6
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Level div-Window-Alert-Cell-Level-3">
-						普通
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Equipment" title="网络设备22221122-2222323">
-						网络设备22221122-2222323
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Start-Time">
-						2014-02-11 17:34:21
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Duration">
-						13小时57分钟18秒
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Info" title="en0发送的失败的总包数大于90">
-						en0发送的失败的总包数大于90
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Confirm">
-						<input type="checkbox" class="input-Window-Alert-Cell-Confirm">
-					</div>
-				</div>
-				<div class="div-Window-Alert-Cell">
-					<div id="" class="div-Window-Alert-Cell-No">
-						7
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Level div-Window-Alert-Cell-Level-4">
-						严重
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Equipment" title="网络设备22221122-2222323">
-						网络设备22221122-2222323
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Start-Time">
-						2014-02-11 17:34:21
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Duration">
-						13小时57分钟18秒
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Info" title="CPU等待时间百分比大于60%">
-						CPU等待时间百分比大于60%
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Confirm">
-						<input type="checkbox" class="input-Window-Alert-Cell-Confirm">
-					</div>
-				</div>
-				<div class="div-Window-Alert-Cell">
-					<div id="" class="div-Window-Alert-Cell-No">
-						8
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Level div-Window-Alert-Cell-Level-4">
-						严重
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Equipment" title="网络设备22221122-2222323">
-						网络设备22221122-2222323
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Start-Time">
-						2014-02-11 17:34:21
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Duration">
-						13小时57分钟18秒
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Info" title="CPU等待时间百分比大于60%">
-						CPU等待时间百分比大于60%
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Confirm">
-						<input type="checkbox" class="input-Window-Alert-Cell-Confirm">
-					</div>
-				</div>
-				<div class="div-Window-Alert-Cell">
-					<div id="" class="div-Window-Alert-Cell-No">
-						9
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Level div-Window-Alert-Cell-Level-4">
-						严重
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Equipment" title="网络设备22221122-2222323">
-						网络设备22221122-2222323
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Start-Time">
-						2014-02-11 17:34:21
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Duration">
-						13小时57分钟18秒
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Info" title="/usr/IBM/WebSphere文件系统利用率大于90%">
-						/usr/IBM/WebSphere文件系统利用率大于90%
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Confirm">
-						<input type="checkbox" class="input-Window-Alert-Cell-Confirm">
-					</div>
-				</div>
-				<div class="div-Window-Alert-Cell">
-					<div id="" class="div-Window-Alert-Cell-No">
-						10
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Level div-Window-Alert-Cell-Level-4">
-						严重
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Equipment" title="网络设备22221122-2222323">
-						网络设备22221122-2222323
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Start-Time">
-						2014-02-11 17:34:21
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Duration">
-						13小时57分钟18秒
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Info" title="/usr/IBM/WebSphere文件系统利用率大于90%">
-						/usr/IBM/WebSphere文件系统利用率大于90%
-					</div>
-					<div id="" class="div-Window-Alert-Cell-Confirm">
-						<input type="checkbox" class="input-Window-Alert-Cell-Confirm">
-					</div>
-				</div>
-			</div>
+
+			<div id="divWindowAlertMain" class="div-Window-Alert-Main"></div>
 			<div id="divWindowAlertFooter" class="div-Window-Alert-Footer">
-				<div id="divWindowAlertFooterFirstPage" class="div-Window-Alert-Footer-First-Page">第一页</div>
-				<div id="divWindowAlertFooterPrevPage" class="div-Window-Alert-Footer-Prev-Page" >前一页</div>
+				<div id="divWindowAlertFooterFirstPage" class="div-Window-Alert-Footer-First-Page"><u>第一页</u></div>
+				<div id="divWindowAlertFooterPrevPage" class="div-Window-Alert-Footer-Prev-Page" ><u>前一页</u></div>
 				<div id="divWindowAlertFooterUserPage" class="div-Window-Alert-Footer-User-Page" >1</div>
 				<div id="divWindowAlertFooterSplit" class="div-Window-Alert-Footer-Split" >/</div>
-				<div id="divWindowAlertFooterAllPage" class="div-Window-Alert-Footer-All-Page" >7</div>
-				<div id="divWindowAlertFooterNextPage" class="div-Window-Alert-Footer-Next-Page" >后一页</div>
-				<div id="divWindowAlertFooterLastPage" class="div-Window-Alert-Footer-Last-Page" >最后页</div>
+				<div id="divWindowAlertFooterAllPage" class="div-Window-Alert-Footer-All-Page" >?</div>
+				<div id="divWindowAlertFooterNextPage" class="div-Window-Alert-Footer-Next-Page" ><u>后一页</u></div>
+				<div id="divWindowAlertFooterLastPage" class="div-Window-Alert-Footer-Last-Page" ><u>最后页</u></div>
+				<div id="divWindowAlertFooterPageInfo" class="div-Window-Alert-Footer-Page-Info" ></div>
 				<div id="divWindowAlertFooterFilter" class="div-Window-Alert-Footer-Filter" >
 					<div id="divFilterTitle" class="div-Filter-Title">过滤</div>
 					<div id="divFilterClose" class="div-Filter-Close">╳</div>
 					<div id="divFilterDetail" class="div-Filter-Detail"></div>
 				</div>
+			</div>
+			<div id="divWindowAlertFooterCover" class="div-Window-Alert-Footer-Cover">
+			<div id="divWindowAlertToolbarCover" class="div-Window-Alert-Toolbar-Cover"></div>
 			</div>
 		</div>
 	</div>
@@ -562,47 +151,15 @@
 				<div id="divAppMonitorAllButton" class="div-App-Monitor-All-Button">
 					应用可用统计
 				</div>
-				<ul id="ulWindowAppMonitorDetailSide" class="ul-Window-Detail-Side">
-					<li class="li-Window-App-Monitor-Detail-Side-button level3-background-color">
-						应用8
-					</li>
-					<li class="li-Window-App-Monitor-Detail-Side-button level3-background-color">
-						应用11
-					</li>
-					<li class="li-Window-App-Monitor-Detail-Side-button green-background-color">
-						应用1
-					</li>
-					<li class="li-Window-App-Monitor-Detail-Side-button green-background-color">
-						应用2
-					</li>
-					<li class="li-Window-App-Monitor-Detail-Side-button green-background-color">
-						应用3
-					</li>
-					<li class="li-Window-App-Monitor-Detail-Side-button green-background-color">
-						应用4
-					</li>
-					<li class="li-Window-App-Monitor-Detail-Side-button green-background-color">
-						应用5
-					</li>
-					<li class="li-Window-App-Monitor-Detail-Side-button green-background-color">
-						应用6
-					</li>
-					<li class="li-Window-App-Monitor-Detail-Side-button green-background-color">
-						应用7
-					</li>
-					<li class="li-Window-App-Monitor-Detail-Side-button green-background-color">
-						应用9
-					</li>
-					<li class="li-Window-App-Monitor-Detail-Side-button green-background-color">
-						应用10
-					</li>
-					<li class="li-Window-App-Monitor-Detail-Side-button green-background-color">
-						应用12
-					</li>
-				</ul>
+				<ul id="ulWindowAppMonitorDetailSide" class="ul-Window-Detail-Side"></ul>
 			</div>
 			<div id="divWindowAppMonitorDetailMainAll" class="div-Window-App-Monitor-Detail-Main-All">
 				<div id="divAppMonitorDetailMainTop" class="div-App-Monitor-Detail-Main-Top">
+					<div id="divWindowAppMonitorDetailMainAllLabel" class="div-Window-App-Monitor-Detail-Main-All-Label"></div>
+					<div id="divAppMonitorDetailMainTopAllChartLevel4Label" class="div-App-Monitor-Detail-Main-Top-All-Chart-Level4-Label">严重</div>
+					<div id="divAppMonitorDetailMainTopAllChartLevel3Label" class="div-App-Monitor-Detail-Main-Top-All-Chart-Level3-Label">普通</div>
+					<div id="divAppMonitorDetailMainTopAllChartLevel2Label" class="div-App-Monitor-Detail-Main-Top-All-Chart-Level2-Label">警告</div>
+					<div id="divAppMonitorDetailMainTopAllChartLevel1Label" class="div-App-Monitor-Detail-Main-Top-All-Chart-Level1-Label">消息</div>
 					<div id="divAppMonitorDetailMainTopAllChart" class="div-App-Monitor-Detail-Main-Top-All-Chart"></div>
 					<div id="divAppMonitorDetailMainTopRight" class="div-App-Monitor-Detail-Main-Top-Right">
 						<div id="divAppMonitorDetailMainTopRightChart" class="div-App-Monitor-Detail-Main-Top-Right-Chart">
@@ -612,18 +169,18 @@
 							<div id="divAppMonitorDetailMainTopAllChartLevel1" class="div-App-Monitor-Detail-Main-Top-All-Chart-Level"></div>
 						</div>
 						<div id="divAppMonitorDetailMainTopRightInfo" class="div-App-Monitor-Detail-Main-Top-Right-Info">
-							<div id="divAppMonitorInfoAll" class="div-App-Monitor-Info-All">共有11个应用被监控中</div>
-							<div id="divAppMonitorInfoOk" class="div-App-Monitor-Info-Ok">72%的应用正常</div>
-							<div id="divAppMonitorInfoError" class="div-App-Monitor-Info-Error">有3个应用存在告警</div>
+							<div id="divAppMonitorInfoAll" class="div-App-Monitor-Info-All"></div>
+							<div id="divAppMonitorInfoOk" class="div-App-Monitor-Info-Ok"></div>
+							<div id="divAppMonitorInfoError" class="div-App-Monitor-Info-Error"></div>
 						</div>
 					</div>
-					<div></div>
+					<div id="divAppMonitorDetailMainTopAllChartText" class="div-App-Monitor-Detail-Main-Top-All-Chart-Text"></div>
 				</div>
 				<div id="divAppMonitorDetailMainBottom" class="div-App-Monitor-Detail-Main-Bottom"></div>
 			</div>
 			<div id="divWindowAppMonitorDetailMainAppDetail" class="div-Window-App-Monitor-Detail-Main-App-Detail">
-				<div id="divAppName" class="div-App-Name div-App-Name-Error">应用X</div>
-				<div id="divAppNameInfo" class="div-App-Name-Info div-App-Name-Info-Error">存在2项错误</div>
+				<div id="divAppName" class="div-App-Name green-color"></div>
+				<!--<div id="divAppNameInfo" class="div-App-Name-Info div-App-Name-Info-Error">存在2项错误</div>-->
 				<div id="divAppTimeChart" class="div-App-Time-Chart">
 					<div id="divAppTimeChartTitle" class="div-App-Time-Chart-Title">
 						<span id="divAppTimeChartTitleLabel" class="div-App-Time-Chart-Title-Label">应用可用性</span>
@@ -632,11 +189,7 @@
 						<div id="divAppTimeChartTitleEgError" class="div-App-Time-Chart-Title-Eg-Error"></div>
 						<div id="divAppTimeChartTitleEgErrorLabel" class="div-App-Time-Chart-Title-Eg-Error-Label">存在错误时段</div>
 					</div>
-					<div id="divAppTimeChartData" class="div-App-Time-Chart-Data">
-						<div class="div-App-Time-Chart-Data-block div-App-Time-Chart-Data-block-Error" style="width:34px"></div>
-						<div class="div-App-Time-Chart-Data-block div-App-Time-Chart-Data-block-Ok" style="width:174px"></div>
-						<div class="div-App-Time-Chart-Data-block div-App-Time-Chart-Data-block-Error" style="width:260px"></div>
-					</div>
+					<div id="divAppTimeChartDataToday" class="div-App-Time-Chart-Data"></div>
 					<div id="divAppTimeChartLabel" class="div-App-Time-Chart-Label">
 						<div class="div-App-Time-Chart-Label-Sub">今天</div>
 						<div class="div-App-Time-Chart-Label-Sub">2:00</div>
@@ -651,13 +204,7 @@
 						<div class="div-App-Time-Chart-Label-Sub">20:00</div>
 						<div class="div-App-Time-Chart-Label-Sub">22:00</div>
 					</div>
-					<div id="divAppTimeChartData" class="div-App-Time-Chart-Data">
-						<div class="div-App-Time-Chart-Data-block div-App-Time-Chart-Data-block-Ok" style="width:74px"></div>
-						<div class="div-App-Time-Chart-Data-block div-App-Time-Chart-Data-block-Error" style="width:260px"></div>
-						<div class="div-App-Time-Chart-Data-block div-App-Time-Chart-Data-block-Ok" style="width:34px"></div>
-						<div class="div-App-Time-Chart-Data-block div-App-Time-Chart-Data-block-Error" style="width:26px"></div>
-						<div class="div-App-Time-Chart-Data-block div-App-Time-Chart-Data-block-Ok" style="width:266px"></div>
-					</div>
+					<div id="divAppTimeChartDataYesterday" class="div-App-Time-Chart-Data"></div>
 					<div id="divAppTimeChartLabel" class="div-App-Time-Chart-Label">
 						<div class="div-App-Time-Chart-Label-Sub">昨天</div>
 						<div class="div-App-Time-Chart-Label-Sub">2:00</div>
@@ -731,117 +278,69 @@
 			<div id="divWindowEquipmentDetailSide" class="div-Window-Detail-Side">
 				<div id="divWindowEquipmentDetailSideSearch" class="div-Window-Equipment-Detail-Side-Search">
 					<input type="text"  id="inputWindowEquipmentDetailSideSearch" class="input-Window-Equipment-Detail-Side-Search" placeholder="搜索监控设备">
-					<div id="inputWindowEquipmentDetailSideAll" class="input-Window-Equipment-Detail-Side-All">
-						<div class="div-Equipment-Type">
-							<div class="div-Equipment-Type-Title">
-								<div class="div-Equipment-Type-Title-Status div-Equipment-Type-Title-Status-Ok">+</div>
-								<div class="div-Equipment-Type-Title-Text">设备类型1</div>
-							</div>
-							<div class="div-Equipment-Type-Content">
-								<div class="div-Equipment-Group">
-									<div class="div-Equipment-Group-Title">
-										<div class="div-Equipment-Group-Title-Status div-Equipment-Group-Title-Status-Ok">+</div>
-										<div class="div-Equipment-Group-Title-Text">设备分组1</div>
-									</div>
-									<div class="div-Equipment-Group-Content">
-										<div class="div-Equipment-Object">
-											<div class="div-Equipment-Object-Status">✩</div>
-											<div class="div-Equipment-Object-Text div-Equipment-Object-Text-Ok">设备1</div>
-										</div>
-										<div class="div-Equipment-Object">
-											<div class="div-Equipment-Object-Status">✭</div>
-											<div class="div-Equipment-Object-Text div-Equipment-Object-Text-Ok">设备2</div>
-										</div>
-										<div class="div-Equipment-Object">
-											<div class="div-Equipment-Object-Status">✭</div>
-											<div class="div-Equipment-Object-Text div-Equipment-Object-Text-Ok">设备3</div>
-										</div>
-										<div class="div-Equipment-Object">
-											<div class="div-Equipment-Object-Status">✩</div>
-											<div class="div-Equipment-Object-Text div-Equipment-Object-Text-Ok">设备4</div>
-										</div>
-									</div>
+				</div>
+				<div id="inputWindowEquipmentDetailSideAll" class="input-Window-Equipment-Detail-Side-All"></div>
+				<div id="divWindowEquipmentDetailSideChoose" class="div-Window-Equipment-Detail-Side-Choose">
+					<div id="divWindowEquipmentDetailSideChooseAll" class="div-Window-Equipment-Detail-Side-Choose-All">所有设备</div>
+					<div id="divWindowEquipmentDetailSideChooseFav" class="div-Window-Equipment-Detail-Side-Choose-Fav">收藏设备</div>
+				</div>
+				
+			</div>
+			<div id="divWindowEquipmentDetailMain" class="div-Window-Equipment-Detail-Main">
+				<div id="divWindowEquipmentDetailMainTop" class="div-Window-Equipment-Detail-Main-Top">
+					<div id="divWindowEquipmentDetailMainTopName" class="div-Window-Equipment-Detail-Main-Top-Name"></div>
+					<div id="divWindowEquipmentDetailMainTopIP" class="div-Window-Equipment-Detail-Main-Top-IP"></div>
+				</div>
+				<div id="divWindowEquipmentDetailMainMiddle" class="div-Window-Equipment-Detail-Main-Middle">
+					<div id="divWindowEquipmentBaseInfo" class="div-Window-Equipment-Base-Info div-Window-Equipment-Label-High">基本信息</div>
+					<div id="divWindowEquipmentCharts" class="div-Window-Equipment-Charts div-Window-Equipment-Label-Low">自定义图表</div>
+					<div id="divWindowEquipmentItem" class="div-Window-Equipment-Item div-Window-Equipment-Label-Low">监控项</div>
+					<div id="divWindowEquipmentDisplayArea" class="div-Window-Equipment-Display-Area">
+						<div id="divWindowEquipmentDisplayAreaBaseInfo" class="div-Window-Equipment-Display-Area-Content">
+							<div id="divEquipmentCMSCharts" class="div-CMS-Charts">
+								<div id="divCPUChartLabel" class="div-CPU-Chart-Label green-color">CPU使用率:12%</div>
+								<div id="divCPUChart" class="div-CPU-Chart">
+									<div id="divCPUChartUseage" class="div-CPU-Chart-Useage green-bg"></div>
 								</div>
-								<div class="div-Equipment-Group">
-									<div class="div-Equipment-Group-Title">
-										<div class="div-Equipment-Group-Title-Status div-Equipment-Group-Title-Status-Ok">+</div>
-										<div class="div-Equipment-Group-Title-Text">设备分组2</div>
-									</div>
-									<div class="div-Equipment-Group-Content">
-										<div class="div-Equipment-Object">
-											<div class="div-Equipment-Object-Status">✩</div>
-											<div class="div-Equipment-Object-Text div-Equipment-Object-Text-Ok">设备5</div>
-										</div>
-										<div class="div-Equipment-Object">
-											<div class="div-Equipment-Object-Status">✭</div>
-											<div class="div-Equipment-Object-Text div-Equipment-Object-Text-Ok">设备6</div>
-										</div>
-									</div>
+								<div id="divMemoryChartLabel" class="div-Memory-Chart-Label green-color">内存使用率:22%</div>
+								<div id="divMemoryChart" class="div-Memory-Chart">
+									<div id="divMemoryChartUseage" class="div-Memory-Chart-Useage green-bg"></div>
+								</div>
+								<div id="divStorageChartLabel" class="div-Storage-Chart-Label level3-color">磁盘使用率:80%</div>
+								<div id="divStorageChart" class="div-Storage-Chart">
+									<div id="divStorageChartUseage" class="div-Storage-Chart-Useage level3-bg"></div>
 								</div>
 							</div>
+							<div id="divEquipmentInfo" class="div-Equipment-Info">
+								<!-- 
+								设备类型:    
+								名称:  
+								操作系统:  
+								序列号:  
+								标签:  
+								MAC地址:  
+								硬件环境:  
+								软件环境:  
+								联系人:  
+								主机位置:  
+								备注: 
+								 -->
+							</div>
+							<div id="divEquipmentAlertChart" class="div-Equipment-Alert-Chart"></div>
 						</div>
-						<div class="div-Equipment-Type">
-							<div class="div-Equipment-Type-Title">
-								<div class="div-Equipment-Type-Title-Status  div-Equipment-Type-Title-Status-Ok">+</div>
-								<div class="div-Equipment-Type-Title-Text">设备类型2</div>
-							</div>
+						<div id="divWindowEquipmentDisplayAreaCharts" class="div-Window-Equipment-Display-Area-Content">
+							<div id="divWindowEquipmentDisplayAreaChartsMain" class="div-Window-Equipment-Display-Area-Charts-Main"></div>
+							<div id="divWindowEquipmentDisplayAreaChartsList" class="div-Window-Equipment-Display-Area-Charts-List"></div>
 						</div>
-						<div class="div-Equipment-Type">
-							<div class="div-Equipment-Type-Title">
-								<div class="div-Equipment-Type-Title-Status  div-Equipment-Type-Title-Status-Error">+</div>
-								<div class="div-Equipment-Type-Title-Text">设备类型3</div>
+						<div id="divWindowEquipmentDisplayAreaMonitorItem" class="div-Window-Equipment-Display-Area-Content">
+							<div  id="divWindowEquipmentDisplayAreaMonitorItemLabel" class="div-Window-Equipment-Display-Area-Monitor-Item-Label">
 							</div>
-							<div class="div-Equipment-Type-Content">
-								<div class="div-Equipment-Group">
-									<div class="div-Equipment-Group-Title">
-										<div class="div-Equipment-Group-Title-Status div-Equipment-Group-Title-Status-Ok">+</div>
-										<div class="div-Equipment-Group-Title-Text">设备分组1</div>
-									</div>
-									<div class="div-Equipment-Group-Content">
-										<div class="div-Equipment-Object">
-											<div class="div-Equipment-Object-Status">✩</div>
-											<div class="div-Equipment-Object-Text div-Equipment-Object-Text-Ok">设备1</div>
-										</div>
-										<div class="div-Equipment-Object">
-											<div class="div-Equipment-Object-Status">✭</div>
-											<div class="div-Equipment-Object-Text div-Equipment-Object-Text-Ok">设备2</div>
-										</div>
-										<div class="div-Equipment-Object">
-											<div class="div-Equipment-Object-Status">✭</div>
-											<div class="div-Equipment-Object-Text div-Equipment-Object-Text-Ok">设备3</div>
-										</div>
-										<div class="div-Equipment-Object">
-											<div class="div-Equipment-Object-Status">✩</div>
-											<div class="div-Equipment-Object-Text div-Equipment-Object-Text-Ok">设备4</div>
-										</div>
-									</div>
-								</div>
-								<div class="div-Equipment-Group">
-									<div class="div-Equipment-Group-Title">
-										<div class="div-Equipment-Group-Title-Status div-Equipment-Group-Title-Status-Error">+</div>
-										<div class="div-Equipment-Group-Title-Text">设备分组2</div>
-									</div>
-									<div class="div-Equipment-Group-Content">
-										<div class="div-Equipment-Object">
-											<div class="div-Equipment-Object-Status">✩</div>
-											<div class="div-Equipment-Object-Text div-Equipment-Object-Text-Error">设备5</div>
-										</div>
-										<div class="div-Equipment-Object">
-											<div class="div-Equipment-Object-Status">✭</div>
-											<div class="div-Equipment-Object-Text div-Equipment-Object-Text-Ok">设备6</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="div-Equipment-Type">
-							<div class="div-Equipment-Type-Title">
-								<div class="div-Equipment-Type-Title-Status div-Equipment-Type-Title-Status-Ok">+</div>
-								<div class="div-Equipment-Type-Title-Text">设备类型4</div>
+							<div  id="divWindowEquipmentDisplayAreaMonitorItemChart" class="div-Window-Equipment-Display-Area-Monitor-Item-Chart">
 							</div>
 						</div>
 					</div>
 				</div>
+				<div id="divWindowEquipmentDetailMainBottom" class="div-Window-Equipment-Detail-Main-Bottom"></div>
 			</div>
 		</div>
 	</div>

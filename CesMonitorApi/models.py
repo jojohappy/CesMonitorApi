@@ -277,7 +277,7 @@ class EventManager(models.Manager):
     def events_statistics_priority_week(self, from_date, end_date, hostid):
         cursor = connection.cursor()
         cursor.execute("""
-            SELECT priority,CONCAT(YEAR(FROM_UNIXTIME(clock)), '-', MONTH(FROM_UNIXTIME(clock)), '-', DAY(FROM_UNIXTIME(clock))) as date_time, COUNT(*) AS COUNT, YEAR(FROM_UNIXTIME(clock)) as y, MONTH(FROM_UNIXTIME(clock)) as m, DAY(FROM_UNIXTIME(clock)) as d FROM events_view WHERE clock>%s AND clock<%s and hostid=%s GROUP BY y, m, d, priority;""", [from_date, end_date, hostid])
+            SELECT priority, DATE_FORMAT(FROM_UNIXTIME(clock), %s) as date_t, COUNT(*) AS COUNT FROM events_view WHERE clock>%s AND clock<%s and hostid=%s GROUP BY date_t, priority;""", ["%Y-%m-%d",from_date, end_date, hostid])
         events_statistics = []
         old_date_time = ""
         index = 0
@@ -306,6 +306,61 @@ class EventManager(models.Manager):
             index += 1
         events_statistics.append(events_statistic)
         return events_statistics
+
+    def events_statistics_priority_host(self, hostid):
+        cursor = connection.cursor()
+        cursor.execute("""
+            SELECT a.priority, count(*) as count FROM events_view a, triggers t WHERE a.value=1 AND a.tr_status=0 AND a.triggerid=t.triggerid AND a.clock = t.lastchange and a.hostid=%s group by a.priority;""", [hostid])
+        events_statistics = []
+        events_statistics.append({'priority':1, 'count': 0})
+        events_statistics.append({'priority':2, 'count': 0})
+        events_statistics.append({'priority':3, 'count': 0})
+        events_statistics.append({'priority':4, 'count': 0})
+        for row in cursor.fetchall():
+            events_statistics[int(row[0]) - 1]['count'] = int(row[1])
+        return events_statistics
+
+    def events_statistics_services_count(self, from_date, end_date, hostids):
+        cursor = connection.cursor()
+        str_sql = 'select HOUR(FROM_UNIXTIME(clock)) AS h, FLOOR(MINUTE(FROM_UNIXTIME(clock)) / 60) AS v, COUNT(*) as count from events_view where clock>%d and clock<%d and hostid in (%s) group by h, v;' % (from_date, end_date, hostids)
+        cursor.execute(str_sql)
+        events_statistics = []
+        
+        for row in cursor.fetchall():
+            events_statistic = {}
+            events_statistic['hour'] = row[0]
+            events_statistic['count'] = row[2]
+            events_statistics.append(events_statistic)
+        return events_statistics
+
+    def events_statistics_services_host(self, from_date, end_date, hostid):
+        cursor = connection.cursor()
+        cursor.execute("""
+            SELECT DATE_FORMAT(FROM_UNIXTIME(clock), %s) as date_t, clock, max(floor(during_clock/60)) as min, during_clock FROM events_view WHERE clock>%s AND clock<%s and hostid=%s order by clock""", ['%Y-%m-%d %H:%i', from_date, end_date, hostid])
+        events_statistics = []
+        
+        for row in cursor.fetchall():
+            events_statistic = {}
+            if row[1] == None or row[3] == None or row[2] == None:
+                break
+            events_statistic['clock'] = row[1]
+            events_statistic['minute'] = row[2]
+            events_statistic['during_clock'] = row[3]
+            events_statistics.append(events_statistic)
+        return events_statistics
+    def current_events_by_itemid(self, itemid):
+        cursor = connection.cursor()
+        cursor.execute("""
+            select count(*) as count from events_view a, triggers t where a.value=1 and  a.tr_status=0 and a.triggerid=t.triggerid and a.clock = t.lastchange and a.itemid=%s;""", [itemid])
+        events_statistics = []
+        
+        for row in cursor.fetchall():
+            events_statistic = {}
+            if row[0] == None:
+                break
+            events_statistics.append(int(row[0]))
+        return events_statistics
+
 
 class Event(models.Model):
     eventid = models.BigIntegerField(primary_key = True)
